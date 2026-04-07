@@ -17,7 +17,7 @@
       color: white; 
       height: 100%;
       width: 100%;
-      overflow: hidden; /* FIX: Makes it a single frame, no scrolling */
+      overflow: hidden; /* Locked single frame */
     }
 
     #transition-overlay { 
@@ -26,7 +26,7 @@
       transition: opacity 0.6s ease-in-out; 
     }
 
-    /* --- SIDEBAR --- */
+    /* --- NAVIGATION --- */
     .main-nav { 
       position: fixed; top: 40px; left: 40px; z-index: 10; 
       display: flex; flex-direction: column; gap: 20px; 
@@ -40,10 +40,18 @@
     .nav-links a { text-decoration: none; color: inherit; transition: 0.3s ease; width: fit-content; }
     .nav-links a:hover { color: #fff; transform: translateX(5px); }
 
-    /* --- INTERACTIVE GALAXY CONTAINER --- */
+    .copy-link { color: var(--accent); cursor: pointer; position: relative; transition: 0.3s; width: fit-content; }
+    .copy-link .status { 
+      position: absolute; left: 0; opacity: 0; color: #4ade80; 
+      transition: 0.3s; pointer-events: none; white-space: nowrap;
+    }
+    .copy-link.copied .label { opacity: 0; }
+    .copy-link.copied .status { opacity: 1; transform: translateY(-5px); }
+
+    /* --- GALAXY CONTAINER --- */
     #canvas-container { 
       position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-      z-index: 1; cursor: grab; /* Visual cue for interaction */
+      z-index: 1; cursor: grab;
     }
     #canvas-container:active { cursor: grabbing; }
 
@@ -57,15 +65,6 @@
     .social-icon { width: 22px; height: 22px; stroke: #444; fill: none; transition: 0.3s; }
     .social-links a:hover .social-icon { stroke: #fff; transform: translateY(-3px); }
     .footer-text { font-size: 0.6rem; color: #333; letter-spacing: 2px; text-transform: uppercase; }
-
-    /* Email Copy Style */
-    .copy-link { color: var(--accent); cursor: pointer; position: relative; transition: 0.3s; }
-    .copy-link .status { 
-      position: absolute; left: 0; opacity: 0; color: #4ade80; 
-      transition: 0.3s; pointer-events: none; white-space: nowrap;
-    }
-    .copy-link.copied .label { opacity: 0; }
-    .copy-link.copied .status { opacity: 1; transform: translateY(-5px); }
   </style>
 </head>
 <body>
@@ -102,7 +101,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   
   <script>
-    // --- BROWSER BACK BUTTON FIX ---
+    // --- BACK BUTTON FIX ---
     window.onpageshow = function(event) {
         if (event.persisted) { window.location.reload(); }
     };
@@ -118,31 +117,40 @@
     renderer.setSize(window.innerWidth, window.innerHeight);
     container.appendChild(renderer.domElement);
 
-    // Galaxy Particles
-    const particlesCount = 2500;
-    const posArray = new THREE.Float32BufferAttribute(particlesCount * 3, 3);
-    for(let i=0; i<particlesCount*3; i++) {
-        posArray.array[i] = (Math.random() - 0.5) * 10;
+    // High Density Particle Cloud
+    const particlesCount = 15000; 
+    const posArray = new Float32Array(particlesCount * 3);
+    for(let i=0; i < particlesCount * 3; i++) {
+        // Creates a dense core with some drift
+        posArray[i] = (Math.random() - 0.5) * (Math.random() * 8); 
     }
+    
     const particlesGeometry = new THREE.BufferGeometry();
-    particlesGeometry.setAttribute('position', posArray);
-    const particlesMaterial = new THREE.PointsMaterial({ size: 0.005, color: '#26c9df' });
+    particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+    
+    const particlesMaterial = new THREE.PointsMaterial({ 
+        size: 0.004, 
+        color: '#26c9df',
+        transparent: true,
+        opacity: 0.8,
+        blending: THREE.AdditiveBlending 
+    });
+    
     const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
     scene.add(particlesMesh);
-    camera.position.z = 3;
+    camera.position.z = 2; // Closer to camera for scale
 
-    // --- INTERACTION LOGIC (X-AXIS ONLY) ---
+    // --- X-AXIS INTERACTION ---
     let isDragging = false;
     let previousMouseX = 0;
-    let autoRotationSpeed = 0.001;
 
-    container.addEventListener('mousedown', (e) => { isDragging = true; });
+    container.addEventListener('mousedown', () => { isDragging = true; });
     window.addEventListener('mouseup', () => { isDragging = false; });
     
     window.addEventListener('mousemove', (e) => {
         if (isDragging) {
             const deltaX = e.clientX - previousMouseX;
-            particlesMesh.rotation.y += deltaX * 0.005; // Manual spin
+            particlesMesh.rotation.y += deltaX * 0.005; 
         }
         previousMouseX = e.clientX;
     });
@@ -150,20 +158,19 @@
     function animate() {
         requestAnimationFrame(animate);
         if(!isDragging) {
-            particlesMesh.rotation.y += autoRotationSpeed; // Passive spin
+            particlesMesh.rotation.y += 0.001; 
         }
         renderer.render(scene, camera);
     }
     animate();
 
-    // Window Resize
     window.addEventListener('resize', () => {
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
     });
 
-    // --- NAV & UTILS ---
+    // --- UTILS ---
     document.querySelectorAll('.transition-link').forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
