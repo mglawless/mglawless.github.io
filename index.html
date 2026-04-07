@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MG. Lawless</title>
   <link rel="icon" type="image/jpeg" href="https://cdn.discordapp.com/attachments/1186625565168500796/1491112293696536607/634fc7589ecb8b3229528763c2a246a1.jpg?ex=69d6820a&is=69d5308a&hm=eed0820dbc511d8613de37b479467bac7d0246cfb5ff357f407fda38b3e18e4f&">
-  
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
 
   <style>
@@ -31,7 +30,7 @@
       z-index: 1; 
     }
     
-    /* Sticky Navigation */
+    /* Navigation */
     .main-nav { 
       position: fixed; 
       top: 40px; 
@@ -60,7 +59,7 @@
       color: var(--text-dim); 
     }
 
-    .nav-links a, .copy-link { 
+    .nav-links a { 
       text-decoration: none;
       color: inherit;
       cursor: pointer; 
@@ -68,31 +67,57 @@
       width: fit-content; 
     }
 
-    .nav-links a:hover, .copy-link:hover { 
+    .nav-links a:hover { 
       color: #fff; 
       transform: translateX(5px);
     }
 
+    /* Copy Link - Anti-Jitter Logic */
     .copy-link {
       color: var(--accent);
+      cursor: pointer;
+      position: relative;
+      height: 1.2rem; /* Locked height */
       display: flex;
       align-items: center;
-      gap: 8px;
-      transition: color 0.4s ease-in-out;
+      transition: color 0.4s ease-in-out, transform 0.3s ease;
+      width: fit-content;
+    }
+    
+    .copy-link:hover { transform: translateX(5px); }
+
+    .copy-link span {
+      transition: opacity 0.3s ease, transform 0.3s ease;
     }
 
-    .copy-link .status { display: none; color: #4ade80; font-weight: bold; }
-    .copy-link.copied .status { display: inline; }
-    .copy-link.copied .label { display: none; }
+    .copy-link .status { 
+      position: absolute;
+      left: 0;
+      opacity: 0; 
+      color: #4ade80; 
+      font-weight: bold;
+      pointer-events: none;
+      white-space: nowrap;
+      transform: translateY(5px);
+    }
 
-    /* Centered Typewriter with Terminus Font */
+    .copy-link.copied .label { 
+      opacity: 0; 
+      transform: translateY(-5px); 
+    }
+
+    .copy-link.copied .status { 
+      opacity: 1; 
+      transform: translateY(0); 
+    }
+
+    /* Typewriter */
     .header-center {
       position: fixed;
       top: 40px;
       left: 50%;
       transform: translateX(-50%);
       z-index: 10;
-      /* Terminus first, then JetBrains Mono as the premium console-style fallback */
       font-family: 'Terminus', 'JetBrains Mono', monospace;
       font-weight: bold;
       color: var(--accent);
@@ -100,7 +125,6 @@
       pointer-events: none;
       white-space: nowrap;
       transition: color 0.4s ease-in-out;
-      letter-spacing: -0.5px;
     }
 
     .cursor {
@@ -147,9 +171,10 @@
 
     .footer-text {
       font-size: 0.65rem;
-      color: #444;
+      color: #fff; /* Changed to White */
       letter-spacing: 2px;
       text-transform: uppercase;
+      opacity: 0.8;
     }
 
     .content-wrapper { position: relative; z-index: 2; width: 100%; padding-top: 100vh; }
@@ -175,8 +200,7 @@
     </div>
   </nav>
 
-  <div class="content-wrapper">
-    </div>
+  <div class="content-wrapper"></div>
 
   <footer>
     <div class="footer-content">
@@ -205,7 +229,6 @@
     import * as THREE from 'three';
     import { GUI } from 'lil-gui';
 
-    // --- TYPEWRITER ---
     const text = "Welcome Traveller";
     const typewriterElement = document.getElementById('typewriter');
     let charIndex = 0;
@@ -218,7 +241,6 @@
     }
     setTimeout(type, 1500);
 
-    // --- EMAIL ---
     const emailBtn = document.getElementById('copyEmail');
     const myEmail = 'maroggebriel@gmail.com';
     emailBtn.addEventListener('click', () => {
@@ -228,7 +250,6 @@
       });
     });
 
-    // --- THREE.JS ---
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
     camera.position.set(0, 6, 12);
@@ -240,13 +261,8 @@
     document.body.appendChild(renderer.domElement);
 
     const params = {
-      count: 70000,
-      radius: 12,
-      branches: 3,
-      spin: 1,
-      randomness: 0.3,
-      insideColor: '#ff3366',
-      outsideColor: '#3366ff'
+      count: 70000, radius: 12, branches: 3, spin: 1, randomness: 0.3,
+      insideColor: '#ff3366', outsideColor: '#3366ff'
     };
 
     let geometry, material, points = null;
@@ -256,11 +272,7 @@
     };
 
     const generateGalaxy = () => {
-      if(points !== null) {
-        geometry.dispose();
-        material.dispose();
-        scene.remove(points);
-      }
+      if(points !== null) { geometry.dispose(); material.dispose(); scene.remove(points); }
       geometry = new THREE.BufferGeometry();
       const positions = new Float32Array(params.count * 3);
       const colors = new Float32Array(params.count * 3);
@@ -285,11 +297,7 @@
       geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
       geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
       material = new THREE.PointsMaterial({
-        size: 0.015,
-        sizeAttenuation: true,
-        depthWrite: false,
-        blending: THREE.AdditiveBlending,
-        vertexColors: true
+        size: 0.015, sizeAttenuation: true, depthWrite: false, blending: THREE.AdditiveBlending, vertexColors: true
       });
       points = new THREE.Points(geometry, material);
       scene.add(points);
@@ -298,19 +306,12 @@
     generateGalaxy();
     syncAccentColor();
 
-    // --- GUI ---
     const gui = new GUI();
-    
-    // Everything updates only on release (onFinishChange)
-    gui.addColor(params, 'insideColor').name('Core Color')
-       .onFinishChange(() => {
-          syncAccentColor();
-          generateGalaxy();
-       }); 
-
-    gui.addColor(params, 'outsideColor').name('Edge Color')
-       .onFinishChange(generateGalaxy);
-
+    gui.addColor(params, 'insideColor').name('Core Color').onFinishChange(() => {
+      syncAccentColor();
+      generateGalaxy();
+    }); 
+    gui.addColor(params, 'outsideColor').name('Edge Color').onFinishChange(generateGalaxy);
     gui.close();
 
     function animate() {
