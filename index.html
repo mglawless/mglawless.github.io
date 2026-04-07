@@ -2,13 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Galaxy Portfolio</title>
+  <title>Galaxy Background</title>
   <style>
-    body { margin: 0; overflow: hidden; background: #000; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { margin: 0; overflow: hidden; background: #000; font-family: sans-serif; }
     canvas { display: block; position: fixed; top: 0; left: 0; z-index: 1; }
-
-    /* Navigation */
+    
     .main-nav {
       position: fixed;
       top: 40px;
@@ -25,9 +23,8 @@
       font-size: 1.2rem;
       letter-spacing: 4px;
       text-transform: uppercase;
-      border-left: 3px solid #4df9ff; /* Cyber blue accent */
+      border-left: 3px solid #a066ff;
       padding-left: 15px;
-      margin-bottom: 10px;
     }
 
     .nav-links {
@@ -35,18 +32,7 @@
       flex-direction: column;
       gap: 12px;
       font-size: 0.9rem;
-      color: #aaa;
-    }
-
-    .nav-links span {
-      cursor: pointer;
-      transition: all 0.3s ease;
-      width: fit-content;
-    }
-
-    .nav-links span:hover {
-      color: #4df9ff;
-      transform: translateX(8px);
+      color: #888;
     }
   </style>
 </head>
@@ -72,88 +58,116 @@
   <script type="module">
     import * as THREE from 'three';
 
-    // --- SETUP ---
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.z = 1;
+    // --- CONFIG (Mapped from your React props) ---
+    const config = {
+      density: 1.1,
+      starCount: 15000,
+      glowIntensity: 0.2,
+      twinkleIntensity: 0.2,
+      rotationSpeed: 0.05,
+      starSpeed: 0.1,
+      hue: 160 // Your requested hueShift
+    };
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.z = 2;
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(window.devicePixelRatio);
     document.body.appendChild(renderer.domElement);
 
-    // --- GALAXY SHADER ---
-    // This shader math creates the swirling star/gas effect
-    const galaxyGeometry = new THREE.PlaneGeometry(2, 2);
-    const galaxyMaterial = new THREE.ShaderMaterial({
+    // --- GALAXY GENERATION ---
+    const geometry = new THREE.BufferGeometry();
+    const positions = new Float32Array(config.starCount * 3);
+    const colors = new Float32Array(config.starCount * 3);
+    const sizes = new Float32Array(config.starCount);
+
+    for (let i = 0; i < config.starCount; i++) {
+      const i3 = i * 3;
+
+      // Position: Sphere distribution
+      const radius = Math.random() * 5 * config.density;
+      const theta = Math.random() * Math.PI * 2;
+      const phi = Math.acos(2 * Math.random() - 1);
+
+      positions[i3] = radius * Math.sin(phi) * Math.cos(theta);
+      positions[i3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
+      positions[i3 + 2] = radius * Math.cos(phi);
+
+      // Color: Applying the hueShift (160 = Cyan/Blue-ish)
+      const color = new THREE.Color(`hsl(${config.hue}, 80%, 70%)`);
+      colors[i3] = color.r;
+      colors[i3 + 1] = color.g;
+      colors[i3 + 2] = color.b;
+
+      sizes[i] = Math.random();
+    }
+
+    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+    geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+
+    // Custom Shader Material for that "Glow" effect
+    const material = new THREE.ShaderMaterial({
+      transparent: true,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
       uniforms: {
         uTime: { value: 0 },
-        uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) }
+        uGlow: { value: config.glowIntensity },
+        uTwinkle: { value: config.twinkleIntensity }
       },
       vertexShader: `
-        varying vec2 vUv;
+        attribute float size;
+        varying vec3 vColor;
+        uniform float uTime;
+        uniform float uTwinkle;
         void main() {
-          vUv = uv;
-          gl_Position = vec4(position, 1.0);
+          vColor = color;
+          vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+          float twinkle = sin(uTime * 2.0 + position.x * 10.0) * uTwinkle;
+          gl_PointSize = size * (30.0 / -mvPosition.z) * (1.0 + twinkle);
+          gl_Position = projectionMatrix * mvPosition;
         }
       `,
       fragmentShader: `
-        uniform float uTime;
-        uniform vec2 uResolution;
-        varying vec2 vUv;
-
-        // Simple noise function for star twinkling
-        float noise(vec2 p) {
-          return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453);
-        }
-
+        varying vec3 vColor;
+        uniform float uGlow;
         void main() {
-          vec2 uv = (gl_FragCoord.xy - 0.5 * uResolution.xy) / min(uResolution.y, uResolution.x);
-          
-          float time = uTime * 0.05;
-          float finalColor = 0.0;
-          
-          // Create star layers
-          for(float i=1.0; i<4.0; i++) {
-            vec2 shift = vec2(time * i * 0.1);
-            float n = noise(uv * 50.0 * i + shift);
-            if(n > 0.98) {
-              float twinkle = sin(uTime * 2.0 + n * 10.0) * 0.5 + 0.5;
-              finalColor += n * twinkle;
-            }
-          }
-
-          // Nebula/Gas Glow
-          vec3 nebula = vec3(0.05, 0.1, 0.2) * (1.0 - length(uv));
-          vec3 color = vec3(finalColor) + nebula;
-          
-          gl_FragColor = vec4(color, 1.0);
+          float d = length(gl_PointCoord - vec2(0.5));
+          float strength = pow(0.05 / d, 1.5) * uGlow;
+          gl_FragColor = vec4(vColor, strength);
         }
       `
     });
 
-    const background = new THREE.Mesh(galaxyGeometry, galaxyMaterial);
-    scene.add(background);
+    const points = new THREE.Points(geometry, material);
+    scene.add(points);
 
     // --- ANIMATION ---
     const clock = new THREE.Clock();
 
     function animate() {
       requestAnimationFrame(animate);
-      
-      // Update time for the shader animations
-      galaxyMaterial.uniforms.uTime.value = clock.getElapsedTime();
-      
+      const delta = clock.getDelta();
+      const elapsed = clock.getElapsedTime();
+
+      material.uniforms.uTime.value = elapsed;
+
+      // Rotation Speed logic
+      points.rotation.y += delta * config.rotationSpeed;
+      points.rotation.x += delta * config.rotationSpeed * 0.2;
+
       renderer.render(scene, camera);
     }
     animate();
 
-    // --- RESIZE ---
     window.addEventListener('resize', () => {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
-      galaxyMaterial.uniforms.uResolution.value.set(window.innerWidth, window.innerHeight);
     });
   </script>
 </body>
