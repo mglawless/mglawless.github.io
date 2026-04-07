@@ -9,7 +9,7 @@
 
   <style>
     :root {
-      --accent: #ff3366;
+      --accent: #26c9df;
       --text-dim: #666;
     }
     
@@ -72,12 +72,12 @@
       transform: translateX(5px);
     }
 
-    /* Copy Link - Anti-Jitter Logic */
+    /* Copy Link - Smoother Transition */
     .copy-link {
       color: var(--accent);
       cursor: pointer;
       position: relative;
-      height: 1.2rem; /* Locked height */
+      height: 1.2rem; 
       display: flex;
       align-items: center;
       transition: color 0.4s ease-in-out, transform 0.3s ease;
@@ -86,7 +86,7 @@
     
     .copy-link:hover { transform: translateX(5px); }
 
-    .copy-link span {
+    .copy-link .label {
       transition: opacity 0.3s ease, transform 0.3s ease;
     }
 
@@ -99,6 +99,7 @@
       pointer-events: none;
       white-space: nowrap;
       transform: translateY(5px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
     }
 
     .copy-link.copied .label { 
@@ -164,17 +165,19 @@
       width: 24px;
       height: 24px;
       display: block;
-      transition: opacity 0.3s ease;
+      stroke: #444; /* Gray default */
+      transition: stroke 0.3s ease, opacity 0.3s ease;
     }
     
-    .yt-icon:hover { opacity: 0.6; }
+    .footer-content:hover .yt-icon { stroke: #fff; }
+    .footer-content:hover .footer-text { color: #fff; }
 
     .footer-text {
       font-size: 0.65rem;
-      color: #fff; /* Changed to White */
+      color: #444; /* Gray default */
       letter-spacing: 2px;
       text-transform: uppercase;
-      opacity: 0.8;
+      transition: color 0.3s ease;
     }
 
     .content-wrapper { position: relative; z-index: 2; width: 100%; padding-top: 100vh; }
@@ -205,7 +208,7 @@
   <footer>
     <div class="footer-content">
       <a href="https://www.youtube.com/@lawless-mg" target="_blank">
-        <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <svg class="yt-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
           <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.42a2.78 2.78 0 0 0-1.94 2C1 8.14 1 12 1 12s0 3.86.46 5.58a2.78 2.78 0 0 0 1.94 2c1.72.42 8.6.42 8.6.42s6.88 0 8.6-.42a2.78 2.78 0 0 0 1.94-2C23 15.86 23 12 23 12s0-3.86-.46-5.58z"></path>
           <polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"></polygon>
         </svg>
@@ -262,7 +265,7 @@
 
     const params = {
       count: 70000, radius: 12, branches: 3, spin: 1, randomness: 0.3,
-      insideColor: '#ff3366', outsideColor: '#3366ff'
+      insideColor: '#26c9df', outsideColor: '#151ce0'
     };
 
     let geometry, material, points = null;
