@@ -1,11 +1,12 @@
 [
   {
-    "title": "PROJECT ALPHA",
-    "tagline": "Visual Design / 2026",
-    "description": "This project has a description and two images.",
+    "title": "NEON OVERDRIVE",
+    "tagline": "2024",
+    "description": "Neon Overdrive is a high octane, anti-gravity racing game that takes place in the near-future cyberpunk city of Cloud Medina. You control a high-tech hovercraft and hone your skills to get the fastest time possible on the track. This game is a 2-man project with Tarik Bulut where I designed all art elements and environment. This game premiered in an exhibition in the German University in Cairo. Original Soundtrack by Ahmed Fouad (MoozMusic)",
     "media": [
-      { "type": "image", "url": "https://via.placeholder.com/800x450" },
-      { "type": "image", "url": "https://via.placeholder.com/800x450" }
+      { "type": "video", "url": "https://www.youtube.com/watch?v=Cx8qDYF1YMs" },
+      { "type": "image", "url": "assets/neon1.jpg" },
+      { "type": "image", "url": "assets/neon2.jpg" }
     ]
   },
   {
