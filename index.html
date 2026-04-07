@@ -2,39 +2,40 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Desert Pixel Portfolio</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Galaxy Portfolio</title>
   <style>
-    body { margin: 0; overflow: hidden; background: #000; font-family: sans-serif; }
-    canvas { display: block; }
-    
+    body { margin: 0; overflow: hidden; background: #000; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    canvas { display: block; position: fixed; top: 0; left: 0; z-index: 1; }
+
+    /* Navigation */
     .main-nav {
       position: fixed;
-      top: 30px;
-      left: 30px;
+      top: 40px;
+      left: 40px;
       z-index: 10;
       color: white;
       display: flex;
       flex-direction: column;
-      gap: 15px;
-      pointer-events: auto;
+      gap: 20px;
     }
 
     .nav-logo {
-      font-weight: bold;
-      font-size: 1.1rem;
-      letter-spacing: 3px;
+      font-weight: 800;
+      font-size: 1.2rem;
+      letter-spacing: 4px;
       text-transform: uppercase;
-      border-left: 2px solid #ffaa00; /* Warm golden border */
-      padding-left: 10px;
+      border-left: 3px solid #4df9ff; /* Cyber blue accent */
+      padding-left: 15px;
       margin-bottom: 10px;
     }
 
     .nav-links {
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      font-size: 0.85rem;
-      color: #bbb;
+      gap: 12px;
+      font-size: 0.9rem;
+      color: #aaa;
     }
 
     .nav-links span {
@@ -44,11 +45,9 @@
     }
 
     .nav-links span:hover {
-      color: #fff;
-      padding-left: 5px;
+      color: #4df9ff;
+      transform: translateX(8px);
     }
-
-    .lil-gui { --width: 300px; z-index: 11; }
   </style>
 </head>
 <body>
@@ -56,144 +55,105 @@
   <nav class="main-nav">
     <div class="nav-logo">M. Lawless</div>
     <div class="nav-links">
-      <span>Project 01</span>
-      <span>Project 02</span>
-      <span>About</span>
-      <span>Contact</span>
+      <span>Index</span>
+      <span>Archive</span>
+      <span>Information</span>
     </div>
   </nav>
 
   <script type="importmap">
     {
       "imports": {
-        "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
-        "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/",
-        "lil-gui": "https://unpkg.com/lil-gui@0.19.1/dist/lil-gui.esm.js"
+        "three": "https://unpkg.com/three@0.160.0/build/three.module.js"
       }
     }
   </script>
 
   <script type="module">
     import * as THREE from 'three';
-    import { GUI } from 'lil-gui';
-    import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
-    import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
-    import { RenderPixelatedPass } from 'three/addons/postprocessing/RenderPixelatedPass.js';
 
-    // --- SCENE SETUP ---
+    // --- SETUP ---
     const scene = new THREE.Scene();
-    // Desert Sunset Background Color
-    scene.background = new THREE.Color(0xffa570); 
-
-    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
-    camera.position.set(7, 4, 7);
-    camera.lookAt(0, 1.5, 0); // Focus slightly higher
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.z = 1;
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap; // Softer shadows
     document.body.appendChild(renderer.domElement);
 
-    // --- POST-PROCESSING ---
-    const composer = new EffectComposer(renderer);
-    composer.addPass(new RenderPass(scene, camera));
-    // Pixel size 8 for a more pronounced "retro" desert feel
-    const pixelatedPass = new RenderPixelatedPass(8, scene, camera);
-    composer.addPass(pixelatedPass);
+    // --- GALAXY SHADER ---
+    // This shader math creates the swirling star/gas effect
+    const galaxyGeometry = new THREE.PlaneGeometry(2, 2);
+    const galaxyMaterial = new THREE.ShaderMaterial({
+      uniforms: {
+        uTime: { value: 0 },
+        uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) }
+      },
+      vertexShader: `
+        varying vec2 vUv;
+        void main() {
+          vUv = uv;
+          gl_Position = vec4(position, 1.0);
+        }
+      `,
+      fragmentShader: `
+        uniform float uTime;
+        uniform vec2 uResolution;
+        varying vec2 vUv;
 
-    // --- OBJECTS ---
-    // Sand Floor
-    const sandGeometry = new THREE.PlaneGeometry(100, 100, 10, 10);
-    const sandMaterial = new THREE.MeshStandardMaterial({ 
-      color: 0xc2b280, // Beige sand tone
-      roughness: 0.9,
-      metalness: 0.0
+        // Simple noise function for star twinkling
+        float noise(vec2 p) {
+          return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453);
+        }
+
+        void main() {
+          vec2 uv = (gl_FragCoord.xy - 0.5 * uResolution.xy) / min(uResolution.y, uResolution.x);
+          
+          float time = uTime * 0.05;
+          float finalColor = 0.0;
+          
+          // Create star layers
+          for(float i=1.0; i<4.0; i++) {
+            vec2 shift = vec2(time * i * 0.1);
+            float n = noise(uv * 50.0 * i + shift);
+            if(n > 0.98) {
+              float twinkle = sin(uTime * 2.0 + n * 10.0) * 0.5 + 0.5;
+              finalColor += n * twinkle;
+            }
+          }
+
+          // Nebula/Gas Glow
+          vec3 nebula = vec3(0.05, 0.1, 0.2) * (1.0 - length(uv));
+          vec3 color = vec3(finalColor) + nebula;
+          
+          gl_FragColor = vec4(color, 1.0);
+        }
+      `
     });
-    const floor = new THREE.Mesh(sandGeometry, sandMaterial);
-    floor.rotation.x = -Math.PI / 2;
-    floor.receiveShadow = true;
-    scene.add(floor);
 
-    // Placeholder Object (Now Sand Color)
-    const geometry = new THREE.TorusKnotGeometry(1, 0.3, 100, 16);
-    const material = new THREE.MeshStandardMaterial({ 
-      color: 0xd9b382, // Warm copper/sand tone
-      metalness: 0.1, 
-      roughness: 0.7 
-    });
-    const torusKnot = new THREE.Mesh(geometry, material);
-    // Start slightly high
-    torusKnot.position.y = 2.5;
-    torusKnot.castShadow = true;
-    scene.add(torusKnot);
+    const background = new THREE.Mesh(galaxyGeometry, galaxyMaterial);
+    scene.add(background);
 
-    // --- LIGHTS ---
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.4); // Brighter ambient
-    scene.add(ambientLight);
-
-    // Golden Sunset Spotlight
-    const spotLight = new THREE.SpotLight(0xffddaa, 600); 
-    spotLight.position.set(5, 12, 5);
-    spotLight.angle = 0.5;
-    spotLight.penumbra = 0.3;
-    spotLight.decay = 2;
-    spotLight.distance = 100;
-    spotLight.castShadow = true;
-    
-    // Improve shadow quality
-    spotLight.shadow.mapSize.width = 1024;
-    spotLight.shadow.mapSize.height = 1024;
-    
-    scene.add(spotLight);
-    spotLight.target = torusKnot;
-
-    // --- GUI MENU SETUP ---
-    const gui = new GUI();
-    const pixelFolder = gui.addFolder('Pixel Settings');
-    pixelFolder.add(pixelatedPass, 'pixelSize', 1, 32, 1).name('Pixel Density');
-
-    const sceneFolder = gui.addFolder('Desert Scene');
-    sceneFolder.addColor(scene, 'background').name('Sky Color');
-    sceneFolder.addColor(sandMaterial, 'color').name('Sand Color');
-
-    const lightFolder = gui.addFolder('Spotlight Settings');
-    lightFolder.addColor(spotLight, 'color').name('Sun Color');
-    lightFolder.add(spotLight, 'intensity', 0, 3000);
-
-    // --- ANIMATION WITH SAND INTERACTION ---
-    const clock = new THREE.Clock(); // Required to track time for smooth animation
+    // --- ANIMATION ---
+    const clock = new THREE.Clock();
 
     function animate() {
       requestAnimationFrame(animate);
-      const elapsedTime = clock.getElapsedTime();
-
-      // Slow continuous rotation
-      torusKnot.rotation.y += 0.005;
-
-      // 1. BOUNCE: Subtle vertical movement (using cosine for smooth up/down)
-      const bobOffset = Math.cos(elapsedTime * 0.5) * 0.15; 
-
-      // 2. SINK: Slowly decrease base height over time (starts at 2.5, targets 0.5)
-      // This makes the object look like it's getting heavy and sinking.
-      const sinkSpeed = 0.015;
-      const targetBaseY = 0.5;
-      const baseHeight = THREE.MathUtils.lerp(torusKnot.position.y, targetBaseY, sinkSpeed * 0.05);
-
-      // Apply combined motion
-      torusKnot.position.y = baseHeight + bobOffset;
-
-      // CRITICAL: Post-Processing Render
-      composer.render();
+      
+      // Update time for the shader animations
+      galaxyMaterial.uniforms.uTime.value = clock.getElapsedTime();
+      
+      renderer.render(scene, camera);
     }
     animate();
 
+    // --- RESIZE ---
     window.addEventListener('resize', () => {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
-      composer.setSize(window.innerWidth, window.innerHeight);
+      galaxyMaterial.uniforms.uResolution.value.set(window.innerWidth, window.innerHeight);
     });
   </script>
 </body>
