@@ -209,7 +209,15 @@
       const lightbox = document.getElementById('lightbox');
       const lightboxImg = lightbox.querySelector('img');
 
+      // Initial Fade In
       setTimeout(() => { overlay.style.opacity = '0'; }, 100);
+
+      // BACK BUTTON FIX (BFCACHE)
+      window.addEventListener('pageshow', (event) => {
+        if (event.persisted) {
+          overlay.style.opacity = '0';
+        }
+      });
 
       // GLOBAL LIGHTBOX FUNCTIONS
       window.openLightbox = (url) => {
@@ -232,7 +240,6 @@
               <p class="project-tagline">${project.tagline}</p>
               <div class="project-media-grid">
                 ${project.media.map(item => {
-                  // YouTube Case
                   if(item.type === 'video' && item.url.includes('youtube.com')) {
                     return `
                       <div style="width:100%; aspect-ratio:16/9;">
@@ -242,11 +249,9 @@
                         </iframe>
                       </div>`;
                   }
-                  // Local MP4 Case
                   if(item.type === 'video') {
                     return `<video src="${item.url}" controls loop muted playsinline style="width:100%; border-radius:4px;"></video>`;
                   }
-                  // Image/GIF Case (with Lightbox Click)
                   return `<img src="${item.url}" alt="${project.title}" style="width:100%; border-radius:4px;" onclick="openLightbox('${item.url}')">`;
                 }).join('')}
               </div>
