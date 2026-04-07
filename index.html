@@ -9,8 +9,16 @@
   </style>
 </head>
 <body>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.160.0/build/three.module.js"
+      }
+    }
+  </script>
+
   <script type="module">
-    import * as THREE from './js/three.module.js';
+    import * as THREE from 'three';
 
     const scene = new THREE.Scene();
 
@@ -21,9 +29,10 @@
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
     document.body.appendChild(renderer.domElement);
 
-    // Add a cube
+    // Cube
     const geometry = new THREE.BoxGeometry();
     const material = new THREE.MeshStandardMaterial({ color: 0xff0000 });
     const cube = new THREE.Mesh(geometry, material);
@@ -33,6 +42,7 @@
     const light = new THREE.DirectionalLight(0xffffff, 1);
     light.position.set(5, 5, 5);
     scene.add(light);
+    scene.add(new THREE.AmbientLight(0x404040)); // Added ambient light so shadows aren't pitch black
 
     function animate() {
       requestAnimationFrame(animate);
