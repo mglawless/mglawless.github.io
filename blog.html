@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blog | MG. Lawless</title>
+  <link rel="icon" type="image/jpeg" href="favicon.jpg">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --accent: #26c9df;
+      --text-dim: #666;
+    }
+    
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body { 
+      background: #000; 
+      font-family: 'Inter', -apple-system, sans-serif; 
+      color: white;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    #transition-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      z-index: 9999;
+      pointer-events: none;
+      transition: opacity 0.6s ease-in-out;
+    }
+
+    /* Navigation - Synced */
+    .main-nav { 
+      position: fixed; 
+      top: 40px; 
+      left: 40px; 
+      z-index: 10; 
+      display: flex; 
+      flex-direction: column; 
+      gap: 20px; 
+    }
+
+    .nav-logo { 
+      font-weight: 800; 
+      font-size: 1.2rem; 
+      letter-spacing: 3px; 
+      text-transform: uppercase; 
+      border-left: 3px solid var(--accent); 
+      padding-left: 15px; 
+    }
+
+    .nav-links { 
+      display: flex; 
+      flex-direction: column; 
+      gap: 12px; 
+      font-size: 0.85rem; 
+      color: var(--text-dim); 
+    }
+
+    .nav-links a { 
+      text-decoration: none;
+      color: inherit;
+      cursor: pointer; 
+      transition: 0.3s ease; 
+      width: fit-content; 
+    }
+
+    .nav-links a:hover { color: #fff; transform: translateX(5px); }
+
+    .copy-link {
+      color: var(--accent);
+      cursor: pointer;
+      position: relative;
+      height: 1.2rem; 
+      display: flex;
+      align-items: center;
+      transition: color 0.4s ease-in-out, transform 0.3s ease;
+      width: fit-content;
+    }
+    .copy-link:hover { transform: translateX(5px); }
+    .copy-link .status { 
+      position: absolute; left: 0; opacity: 0; color: #4ade80; font-weight: bold;
+      pointer-events: none; white-space: nowrap; transform: translateY(5px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    .copy-link.copied .label { opacity: 0; transform: translateY(-5px); }
+    .copy-link.copied .status { opacity: 1; transform: translateY(0); }
+
+    /* Blog Content Area */
+    .content-wrapper { 
+      position: relative; 
+      z-index: 2; 
+      width: 100%; 
+      padding-top: 100px;
+      padding-bottom: 180px; 
+    }
+
+    .blog-container {
+      max-width: 50%;
+      margin: 0 auto;
+    }
+
+    .blog-header { margin-bottom: 60px; }
+    .blog-title { font-family: 'JetBrains Mono', monospace; font-size: 3rem; margin-bottom: 10px; }
+    .blog-subtitle { color: var(--text-dim); font-size: 1.1rem; }
+
+    /* The List Style */
+    .blog-list {
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+      margin-top: 50px;
+    }
+
+    .blog-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      text-decoration: none;
+      color: white;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #1a1a1a;
+      transition: 0.3s ease;
+    }
+
+    .blog-item:hover {
+      border-color: var(--accent);
+    }
+
+    .post-name {
+      font-size: 1.3rem;
+      font-weight: 500;
+      transition: 0.3s ease;
+    }
+
+    .blog-item:hover .post-name {
+      color: var(--accent);
+      transform: translateX(5px);
+    }
+
+    .post-date {
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text-dim);
+      font-size: 0.9rem;
+    }
+
+    /* Footer - Synced */
+    footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      z-index: 10;
+      padding: 30px;
+      text-align: center;
+      pointer-events: none;
+    }
+    .footer-content {
+      pointer-events: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+    }
+    .social-links { display: flex; gap: 20px; align-items: center; }
+    .social-icon { width: 24px; height: 24px; stroke: #444; fill: none; transition: all 0.3s ease-in-out; }
+    .social-links a:hover .social-icon { stroke: #fff; transform: translateY(-3px); filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.6)); }
+    .footer-text { font-size: 0.65rem; color: #444 !important; letter-spacing: 2px; text-transform: uppercase; pointer-events: none; }
+
+    @media (max-width: 768px) {
+      .main-nav { top: auto; bottom: 120px; left: 20px; }
+      .blog-container { max-width: 90%; }
+      .blog-title { font-size: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="transition-overlay"></div>
+
+  <nav class="main-nav">
+    <div class="nav-logo">MG. Lawless</div>
+    <div class="nav-links">
+      <a href="./" class="transition-link">Home</a>
+      <a href="works.html" class="transition-link">Works</a>
+      <a href="blog.html" class="transition-link" style="color: #fff;">Blog</a>
+      <div class="copy-link" id="copyEmail">
+        <span class="label">Copy Email</span>
+        <span class="status">Email Copied ✓</span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content-wrapper">
+    <main class="blog-container">
+      <header class="blog-header">
+        <h1 class="blog-title">Thoughts</h1>
+        <p class="blog-subtitle">Reflections on making, thinking, and design.</p>
+      </header>
+
+      <div class="blog-list">
+        <a href="#" class="blog-item">
+          <span class="post-name">Before the frame</span>
+          <span class="post-date">Mar 20, 2026</span>
+        </a>
+        <a href="#" class="blog-item">
+          <span class="post-name">Perspective through distance</span>
+          <span class="post-date">Dec 20, 2025</span>
+        </a>
+        <a href="#" class="blog-item">
+          <span class="post-name">Work precedes opportunity</span>
+          <span class="post-date">Sep 18, 2025</span>
+        </a>
+        <a href="#" class="blog-item">
+          <span class="post-name">Principles of good animation</span>
+          <span class="post-date">Sep 13, 2025</span>
+        </a>
+        <a href="#" class="blog-item">
+          <span class="post-name">Constraints</span>
+          <span class="post-date">Sep 4, 2025</span>
+        </a>
+        <a href="#" class="blog-item">
+          <span class="post-name">Blue-collar design</span>
+          <span class="post-date">Aug 20, 2025</span>
+        </a>
+        <a href="#" class="blog-item">
+          <span class="post-name">More effort ≠ better quality</span>
+          <span class="post-date">Aug 2, 2025</span>
+        </a>
+      </div>
+    </main>
+  </div>
+
+  <footer>
+    <div class="footer-content">
+      <div class="social-links">
+        <a href="https://www.youtube.com/@lawless-mg" target="_blank">
+          <svg class="social-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.42a2.78 2.78 0 0 0-1.94 2C1 8.14 1 12 1 12s0 3.86.46 5.58a2.78 2.78 0 0 0 1.94 2c1.72.42 8.6.42 8.6.42s6.88 0 8.6-.42a2.78 2.78 0 0 0 1.94-2C23 15.86 23 12 23 12s0-3.86-.46-5.58z"></path>
+            <polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"></polygon>
+          </svg>
+        </a>
+        <a href="https://steamcommunity.com/id/gunslinging1/" target="_blank">
+          <svg class="social-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2a10 10 0 0 0-9.92 8.79l3.5 1.54a3.5 3.5 0 0 1 6.3 2.11l4.47 2a3.5 3.5 0 1 1-.44 1.27l-4.47-2a3.5 3.5 0 0 1-5.18-3.04l-3.53-1.55A10 10 0 1 0 12 2z"/>
+          </svg>
+        </a>
+      </div>
+      <div class="footer-text">©2026 / All Right Reserved / LAWLESS / MARWAN GEBRIEL</div>
+    </div>
+  </footer>
+
+  <script>
+    // FADE & NAV LOGIC
+    window.addEventListener('DOMContentLoaded', () => {
+      const overlay = document.getElementById('transition-overlay');
+      setTimeout(() => { overlay.style.opacity = '0'; }, 100);
+
+      document.querySelectorAll('.transition-link').forEach(link => {
+        link.addEventListener('click', (e) => {
+          if (link.href === window.location.href) return;
+          e.preventDefault();
+          const target = link.href;
+          overlay.style.opacity = '1';
+          setTimeout(() => { window.location.href = target; }, 600);
+        });
+      });
+    });
+
+    // EMAIL LOGIC
+    const emailBtn = document.getElementById('copyEmail');
+    emailBtn.addEventListener('click', () => {
+      navigator.clipboard.writeText('maroggebriel@gmail.com').then(() => {
+        emailBtn.classList.add('copied');
+        setTimeout(() => emailBtn.classList.remove('copied'), 2000);
+      });
+    });
+  </script>
+</body>
+</html>
