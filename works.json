@@ -4,7 +4,7 @@
     "tagline": "2024",
     "description": "Neon Overdrive is a high octane, anti-gravity racing game that takes place in the near-future cyberpunk city of Cloud Medina. You control a high-tech hovercraft and hone your skills to get the fastest time possible on the track. This game is a 2-man project with Tarik Bulut where I designed all art elements and environment. This game premiered in an exhibition in the German University in Cairo. Original Soundtrack by Ahmed Fouad (MoozMusic)",
     "media": [
-      { "type": "video", "url": "https://www.youtube.com/watch?v=Cx8qDYF1YMs" },
+      { "type": "video", "url": "<iframe width="560" height="315" src="https://www.youtube.com/embed/Cx8qDYF1YMs?si=23_mfvs-aT8Pdi1r" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>" },
       { "type": "image", "url": "assets/neon1.jpg" },
       { "type": "image", "url": "assets/neon2.jpg" }
     ]
