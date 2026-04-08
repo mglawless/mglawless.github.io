@@ -32,8 +32,9 @@
       height: 100%;
       background: #000;
       z-index: 9999;
-      pointer-events: none;
+      pointer-events: none; /* Allows clicks to pass through when transparent */
       transition: opacity 0.6s ease-in-out;
+      opacity: 1; /* Starts dark */
     }
 
     canvas { display: block; position: fixed; top: 0; left: 0; z-index: 1; outline: none; }
@@ -217,17 +218,15 @@
 
       .console-fixed-layer { 
         width: 90%; 
-        /* Centering adjustment: 50% height + offset to account for navbar height */
         top: calc(50% + 40px); 
         transform: translate(-50%, -50%); 
       } 
 
       .console-text-container { font-size: 1.4rem; }
 
-      /* Force the lil-gui controls to bottom right and shrink them on mobile */
       .lil-gui {
         top: auto !important;
-        bottom: 100px !important; /* Above the footer */
+        bottom: 100px !important; 
         right: 10px !important;
         left: auto !important;
         width: 140px !important;
@@ -354,7 +353,18 @@
 
     window.addEventListener('DOMContentLoaded', () => {
       const overlay = document.getElementById('transition-overlay');
+      
+      // Force overlay to fade out on load
       setTimeout(() => { overlay.style.opacity = '0'; }, 100);
+
+      // Handle the "Back" button or cached state reset
+      window.onpageshow = function(event) {
+          overlay.style.opacity = '0';
+          overlay.style.display = 'none'; 
+          setTimeout(() => {
+              overlay.style.display = 'block';
+          }, 100);
+      };
 
       document.querySelectorAll('.transition-link').forEach(link => {
         link.addEventListener('click', (e) => {
