@@ -123,10 +123,29 @@
       max-width: 900px; 
       margin-left: calc(var(--nav-width) + 100px); 
       margin-right: 60px;
+    }
+
+    /* --- WORKS HEADER --- */
+    .works-header { margin-bottom: 80px; }
+    .works-title { 
+      font-family: 'JetBrains Mono', monospace; 
+      font-size: 3rem; 
+      margin-bottom: 15px; 
+      text-transform: uppercase;
+    }
+    .works-subtitle { 
+      color: var(--text-dim); 
+      font-size: 1.1rem; 
+      max-width: 600px;
+      line-height: 1.6;
+    }
+
+    .project-list-wrapper {
       display: flex; 
       flex-direction: column; 
       gap: 150px; 
     }
+
     .project-entry { width: 100%; }
     .project-title { font-family: 'JetBrains Mono', monospace; font-size: 2.2rem; margin-bottom: 8px; text-transform: uppercase; }
     .project-tagline { color: var(--text-dim); font-size: 0.8rem; margin-bottom: 30px; text-transform: uppercase; letter-spacing: 2px; }
@@ -156,6 +175,7 @@
     @media (max-width: 1100px) {
       .main-nav { position: relative; top: 0; left: 0; padding: 40px; width: 100%; }
       .works-container { margin: 0 auto; max-width: 90%; }
+      .works-title { font-size: 2.2rem; }
     }
   </style>
 </head>
@@ -181,7 +201,14 @@
   </nav>
 
   <div class="content-wrapper">
-    <main class="works-container" id="works-list"></main>
+    <main class="works-container">
+      <header class="works-header">
+        <h1 class="works-title">WORKS</h1>
+        <p class="works-subtitle">A collection of environment studies, interactive assets, and digital worlds.</p>
+      </header>
+
+      <div class="project-list-wrapper" id="works-list"></div>
+    </main>
   </div>
 
   <footer>
@@ -209,17 +236,12 @@
       const lightbox = document.getElementById('lightbox');
       const lightboxImg = lightbox.querySelector('img');
 
-      // Initial Fade In
       setTimeout(() => { overlay.style.opacity = '0'; }, 100);
 
-      // BACK BUTTON FIX (BFCACHE)
       window.addEventListener('pageshow', (event) => {
-        if (event.persisted) {
-          overlay.style.opacity = '0';
-        }
+        if (event.persisted) { overlay.style.opacity = '0'; }
       });
 
-      // GLOBAL LIGHTBOX FUNCTIONS
       window.openLightbox = (url) => {
         lightboxImg.src = url;
         lightbox.classList.add('active');
@@ -229,7 +251,6 @@
         lightbox.classList.remove('active');
       });
 
-      // HYBRID RENDERER
       fetch('works.json')
         .then(res => res.json())
         .then(data => {
@@ -241,10 +262,13 @@
               <div class="project-media-grid">
                 ${project.media.map(item => {
                   if(item.type === 'video' && item.url.includes('youtube.com')) {
+                    // Cleaner YT integration: modestbranding, rel=0, no keyboard controls
+                    const videoId = item.url.split('v=')[1] || item.url.split('/').pop();
+                    const cleanUrl = `https://www.youtube.com/embed/${videoId}?modestbranding=1&rel=0&showinfo=0&color=white`;
                     return `
                       <div style="width:100%; aspect-ratio:16/9;">
-                        <iframe src="${item.url}" 
-                          style="width:100%; height:100%; border:none; border-radius:4px;" 
+                        <iframe src="${cleanUrl}" 
+                          style="width:100%; height:100%; border:none; border-radius:4px; filter: grayscale(0.2) contrast(1.1);" 
                           allow="autoplay; encrypted-media" allowfullscreen>
                         </iframe>
                       </div>`;
@@ -260,7 +284,6 @@
           `).join('');
         });
 
-      // NAV TRANSITIONS
       document.querySelectorAll('.transition-link').forEach(link => {
         link.addEventListener('click', (e) => {
           if (link.href === window.location.href) return;
@@ -270,7 +293,6 @@
         });
       });
 
-      // EMAIL CLIPBOARD
       const emailBtn = document.getElementById('copyEmail');
       emailBtn.addEventListener('click', () => {
         navigator.clipboard.writeText('maroggebriel@gmail.com').then(() => {
