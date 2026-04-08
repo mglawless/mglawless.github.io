@@ -38,7 +38,7 @@
 
     canvas { display: block; position: fixed; top: 0; left: 0; z-index: 1; outline: none; }
     
-    /* --- 1. THE LOGO: FIXED & INDEPENDENT --- */
+    /* --- 1. THE LOGO: FIXED & INDEPENDENT (DESKTOP) --- */
     .main-sidebar { 
       position: fixed; 
       top: 40px; 
@@ -95,7 +95,7 @@
     .copy-link.copied .label { opacity: 0; transform: translateY(-5px); }
     .copy-link.copied .status { opacity: 1; transform: translateY(0); }
 
-    /* --- 2. THE CONSOLE: CENTERED & GHOST-FREE --- */
+    /* --- 2. THE CONSOLE: CENTERED --- */
     .console-fixed-layer {
       position: fixed;
       top: 40px; 
@@ -204,15 +204,23 @@
       font-size: 0.65rem; color: #444; letter-spacing: 2px; text-transform: uppercase;
     }
 
-    /* --- MOBILE SPECIFIC RULES --- */
-    @media (max-width: 1024px) {
-      /* 1. Center the console vertically on mobile */
+    /* --- MOBILE SPECIFIC RULES (MATCHING WORKS PAGE NAV) --- */
+    @media (max-width: 1100px) {
+      .main-sidebar { 
+        position: relative; 
+        top: 0; 
+        left: 0; 
+        padding: 40px; 
+        width: 100%; 
+        z-index: 20;
+      }
+
       .console-fixed-layer { 
         width: 90%; 
-        top: 50%; 
+        top: 60%; /* Pushed slightly down to account for relative nav at top */
         transform: translate(-50%, -50%); 
       } 
-      .main-sidebar { top: 20px; left: 20px; }
+
       .console-text-container { font-size: 1.4rem; }
     }
   </style>
@@ -475,7 +483,7 @@
     const autoSpeed = 0.0005;
     const friction = 0.95; 
 
-    // MOUSE CONTROLS
+    // MOUSE
     renderer.domElement.addEventListener('mousedown', () => { isDragging = true; });
     window.addEventListener('mouseup', () => { isDragging = false; });
     window.addEventListener('mousemove', (e) => {
@@ -487,14 +495,12 @@
       previousMouseX = e.clientX;
     });
 
-    // TOUCH CONTROLS (MOBILE)
+    // TOUCH (MOBILE)
     renderer.domElement.addEventListener('touchstart', (e) => {
       isDragging = true;
       previousMouseX = e.touches[0].clientX;
     }, { passive: true });
-
     window.addEventListener('touchend', () => { isDragging = false; });
-
     window.addEventListener('touchmove', (e) => {
       if (isDragging && points) {
         const deltaX = e.touches[0].clientX - previousMouseX;
