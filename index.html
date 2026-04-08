@@ -108,6 +108,49 @@
       pointer-events: none;
       white-space: nowrap;
       transition: color 0.3s ease;
+      text-align: center;
+    }
+
+    /* --- DIALOGUE SYSTEM STYLES --- */
+    #prompt-click {
+      display: block;
+      font-size: 0.9rem;
+      color: #fff;
+      margin-top: 10px;
+      opacity: 0;
+      cursor: pointer;
+      pointer-events: auto;
+      transition: opacity 1s ease, transform 0.3s ease;
+      letter-spacing: 2px;
+    }
+    #prompt-click.visible { opacity: 0.6; }
+    #prompt-click:hover { opacity: 1; transform: scale(1.05); }
+
+    #dialogue-container {
+      margin-top: 30px;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+      pointer-events: auto;
+    }
+    .dialogue-options {
+      display: flex;
+      gap: 20px;
+      font-size: 0.8rem;
+    }
+    .dialogue-btn {
+      color: var(--accent);
+      border: 1px solid rgba(38, 201, 223, 0.3);
+      padding: 8px 15px;
+      cursor: pointer;
+      transition: 0.3s ease;
+      background: rgba(0,0,0,0.5);
+    }
+    .dialogue-btn:hover {
+      background: var(--accent);
+      color: #000;
+      box-shadow: 0 0 15px var(--accent);
     }
 
     .cursor {
@@ -181,7 +224,12 @@
   <div id="transition-overlay"></div>
 
   <div class="header-center">
-    <span id="typewriter"></span><span class="cursor"></span>
+    <div><span id="typewriter"></span><span class="cursor"></span></div>
+    <span id="prompt-click">[ CLICK TO INITIALIZE ]</span>
+    
+    <div id="dialogue-container">
+      <div class="dialogue-options" id="options-list"></div>
+    </div>
   </div>
 
   <nav class="main-nav">
@@ -231,12 +279,30 @@
     import * as THREE from 'three';
     import { GUI } from 'lil-gui';
 
+    // DIALOGUE ENGINE DATA
+    const dialogueData = {
+      start: {
+        text: "System Online. Connections stable.",
+        options: [
+          { label: "Who are you?", next: "who" },
+          { label: "Where am I?", next: "where" }
+        ]
+      },
+      who: {
+        text: "I am Lawless. A digital architect and dreamer.",
+        options: [{ label: "Return", next: "start" }]
+      },
+      where: {
+        text: "You are within the Void Gallery. A hub of my creations.",
+        options: [{ label: "Return", next: "start" }]
+      }
+    };
+
     // FADE TRANSITION & BACK BUTTON FIX
     window.addEventListener('DOMContentLoaded', () => {
       const overlay = document.getElementById('transition-overlay');
       setTimeout(() => { overlay.style.opacity = '0'; }, 100);
 
-      // Fix for stuck black screen when using browser back button
       window.addEventListener('pageshow', (event) => {
         if (event.persisted) {
           overlay.style.opacity = '0';
@@ -254,18 +320,56 @@
       });
     });
 
-    // TYPEWRITER
-    const text = "Welcome Traveller";
+    // TYPEWRITER & DIALOGUE LOGIC
     const typewriterElement = document.getElementById('typewriter');
+    const promptClick = document.getElementById('prompt-click');
+    const diagContainer = document.getElementById('dialogue-container');
+    const optionsList = document.getElementById('options-list');
+    
+    let currentText = "Welcome Traveller";
     let charIndex = 0;
-    function type() {
-      if (charIndex < text.length) {
-        typewriterElement.textContent += text.charAt(charIndex);
+    let isDialogueActive = false;
+
+    function type(callback) {
+      if (charIndex < currentText.length) {
+        typewriterElement.textContent += currentText.charAt(charIndex);
         charIndex++;
-        setTimeout(type, 100);
+        setTimeout(() => type(callback), 80);
+      } else if (callback) {
+        callback();
       }
     }
-    setTimeout(type, 1500);
+
+    // Initialize first text
+    setTimeout(() => {
+      type(() => {
+        promptClick.classList.add('visible');
+      });
+    }, 1500);
+
+    promptClick.addEventListener('click', () => {
+      promptClick.style.display = 'none';
+      diagContainer.style.display = 'flex';
+      startDialogue('start');
+    });
+
+    function startDialogue(key) {
+      const node = dialogueData[key];
+      typewriterElement.textContent = "";
+      currentText = node.text;
+      charIndex = 0;
+      optionsList.innerHTML = "";
+      
+      type(() => {
+        node.options.forEach(opt => {
+          const btn = document.createElement('div');
+          btn.className = 'dialogue-btn';
+          btn.textContent = `[ ${opt.label} ]`;
+          btn.onclick = () => startDialogue(opt.next);
+          optionsList.appendChild(btn);
+        });
+      });
+    }
 
     // EMAIL
     const emailBtn = document.getElementById('copyEmail');
@@ -332,20 +436,17 @@
 
     generateGalaxy();
 
-    // GUI
     const gui = new GUI();
     gui.close(); 
     gui.addColor(params, 'insideColor').name('Core Colour').onFinishChange(generateGalaxy);
     gui.addColor(params, 'outsideColor').name('Edge Colour').onFinishChange(generateGalaxy);
 
-    // --- INTERACTION LOGIC (TARGETED TO CANVAS) ---
     let isDragging = false;
     let previousMouseX = 0;
     let velocity = 0.0005; 
     const autoSpeed = 0.0005;
     const friction = 0.95; 
 
-    // Targeted only to canvas so buttons aren't interrupted
     renderer.domElement.addEventListener('mousedown', () => { isDragging = true; });
     window.addEventListener('mouseup', () => { isDragging = false; });
     
