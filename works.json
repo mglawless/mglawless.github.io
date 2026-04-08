@@ -27,7 +27,7 @@
     "tagline": "Virutal Reality Combat Training // Environment, Assets, Physics, Development, Level Design, Oculus // 2023",
     "description": "Combat Sim VR is a solo project that features fully functional VR integration, physics, and environment. The objective of this project was to experiment with an educational martial arts training environment in VR that included elements video game and gamification elements to create a more fun and enjoyable, yet informative experience.",
     "media": [
-      { "type": "video", "url": "assets/csvrvid.mp4" },
+      { "type": "video", "url": "assets/csvrvid.mp4", "poster": "assets/csvr3.png" },
       { "type": "image", "url": "assets/csvr1.png" },
       { "type": "image", "url": "assets/csvr2.png" },
       { "type": "image", "url": "assets/csvr3.png" }
