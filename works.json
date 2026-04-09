@@ -32,5 +32,24 @@
       { "type": "image", "url": "assets/csvr2.png" },
       { "type": "image", "url": "assets/csvr3.png" }
     ]
+  },
+  {
+    "title": "Assortment",
+    "tagline": "An assortment of assets and works",
+    "media": [
+      { "type": "image", "url": "assets/ass13.png" },
+      { "type": "image", "url": "assets/ass1.png" },
+      { "type": "image", "url": "assets/ass2.png" },
+      { "type": "image", "url": "assets/ass3.png" },
+      { "type": "image", "url": "assets/ass11.png" },
+      { "type": "image", "url": "assets/ass12.png" },
+      { "type": "image", "url": "assets/ass7.png" },
+      { "type": "image", "url": "assets/ass8.png" },
+      { "type": "image", "url": "assets/ass9.png" },
+      { "type": "image", "url": "assets/ass10.png" },
+      { "type": "image", "url": "assets/ass6.png" },
+      { "type": "image", "url": "assets/ass4.png" },
+      { "type": "image", "url": "assets/ass5.png" }
+    ]
   }
 ]
