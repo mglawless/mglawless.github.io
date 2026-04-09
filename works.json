@@ -1,7 +1,7 @@
 [
   {
     "title": "NEON OVERDRIVE",
-    "tagline": "Anti-Gravity Racing Game // Environment, Art Direction, Level Design, UI // 2024",
+    "tagline": "Anti-Gravity Racing Game // Environment, Gameplay Design, Art Direction, Level Design, UI // 2024",
     "description": "Neon Overdrive is a high octane, anti-gravity racing game that takes place in the near-future cyberpunk city of Cloud Medina. This game premiered in an exhibition in the German University in Cairo. Original Soundtrack by Ahmed Fouad (MoozMusic)",
     "media": [
       { "type": "video", "url": "https://www.youtube.com/embed/Cx8qDYF1YMs?si=9p_EFEdZBwNpBvDu" },
@@ -11,8 +11,22 @@
     ]
   },
   {
+    "title": "Blown to Bits",
+    "tagline": "Retro-Style movement survival shooter. // Environment, Gameplay Design, Art Direction, Assets, UI, Level Design, Sound Design",
+    "description": "One-week project, featuring modernised retro elements. Stylised cell shaded thriller environment, mixing 3D and 2D pixel art assets creatively.",
+    "media": [
+      { "type": "video", "url": "https://www.youtube.com/embed/nyCva3bTRYk?si=0XQzCLXS9wRdYLuA" },
+      { "type": "image", "url": "assets/btb1.png" },
+      { "type": "image", "url": "assets/btb2.png" },
+      { "type": "image", "url": "assets/btb3.png" },
+      { "type": "image", "url": "assets/btb4.png" },
+      { "type": "image", "url": "assets/btb5.png" },
+      { "type": "image", "url": "assets/btb6.png" }
+    ]
+  },
+  {
     "title": "PuppyCat's Quest",
-    "tagline": "Speedrun Platforming Game // Environment, Animation, Art, Illustration, UI, Development, Level Design // 2023",
+    "tagline": "Speedrun Platforming Game // Environment, Animation, Gameplay Design, Art, Illustration, UI, Development, Level Design // 2023",
     "description": "PuppyCat's Quest is a solo game which was inspired by a Netflix original: Bee and PuppyCat. You control PuppyCat and make it through a peaceful environment in this speed-run platformer. This game premiered in an exhibition at the German University in Cairo.", 
     "media": [
       { "type": "video", "url": "assets/pcqvid.mp4", "poster": "assets/pcqthumb.png" },
@@ -24,7 +38,7 @@
   },
   {
     "title": "Combat Sim VR",
-    "tagline": "Virtual Reality Combat Training // Environment, Assets, Physics, Development, Level Design, Oculus // 2023",
+    "tagline": "Virtual Reality Combat Training // Environment, Assets, Gameplay Design, Physics, Development, Level Design, Oculus // 2023",
     "description": "Combat Sim VR is a solo project that features fully functional VR integration, physics, and environment. The objective of this project was to experiment with an educational martial arts training environment in VR. Including video game and gamification elements to create a more fun and enjoyable, yet informative experience.",
     "media": [
       { "type": "video", "url": "assets/csvrvid.mp4", "poster": "assets/csvr3.png" },
@@ -43,8 +57,17 @@
     ]
   },
   {
+    "title": "Interactive, Immersive, Evolving AI Environment",
+    "tagline": "In-Game AI Characters interact with you based on your behaviour and their surroundings. They treat you differently based on their unique personalities and how much they like/trust you.",
+    "media": [
+      { "type": "image", "url": "assets/aivr1.png" },
+      { "type": "image", "url": "assets/aivr2.png" },
+      { "type": "image", "url": "assets/aivr3.png" }
+    ]
+  },
+  {
     "title": "Jimmy's Office",
-    "tagline": "Puzzle Platformer // Environmemt // Level Design // Assets",
+    "tagline": "Puzzle Platformer // Environment, Gameplay Design, Level Design, Assets",
     "media": [
       { "type": "image", "url": "assets/jim1.png" },
       { "type": "image", "url": "assets/jim2.png" },
