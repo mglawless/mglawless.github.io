@@ -13,7 +13,7 @@
   {
     "title": "PuppyCat's Quest",
     "tagline": "Speedrun Platforming Game // Environment, Animation, Art, Illustration, UI, Development, Level Design // 2023",
-    "description": "PuppyCat's Quest is a solo game which was inspired by a Netflix original: Bee and PuppyCat. You control PuppyCat and make it through a stunning seemingly peaceful environment in this speed-run platformer. This game premiered in an exhibition at the German University in Cairo.", 
+    "description": "PuppyCat's Quest is a solo game which was inspired by a Netflix original: Bee and PuppyCat. You control PuppyCat and make it through a peaceful environment in this speed-run platformer. This game premiered in an exhibition at the German University in Cairo.", 
     "media": [
       { "type": "video", "url": "assets/pcqvid.mp4", "poster": "assets/pcqthumb.png" },
       { "type": "image", "url": "assets/pcq1.png" },
@@ -25,7 +25,7 @@
   {
     "title": "Combat Sim VR",
     "tagline": "Virtual Reality Combat Training // Environment, Assets, Physics, Development, Level Design, Oculus // 2023",
-    "description": "Combat Sim VR is a solo project that features fully functional VR integration, physics, and environment. The objective of this project was to experiment with an educational martial arts training environment in VR that included elements video game and gamification elements to create a more fun and enjoyable, yet informative experience.",
+    "description": "Combat Sim VR is a solo project that features fully functional VR integration, physics, and environment. The objective of this project was to experiment with an educational martial arts training environment in VR. Including video game and gamification elements to create a more fun and enjoyable, yet informative experience.",
     "media": [
       { "type": "video", "url": "assets/csvrvid.mp4", "poster": "assets/csvr3.png" },
       { "type": "image", "url": "assets/csvr1.png" },
