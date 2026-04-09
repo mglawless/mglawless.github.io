@@ -27,6 +27,24 @@
     ]
   },
   {
+    "title": "Risky Fishing",
+    "tagline": "Fishing collector game with an exciting twist. // Environment, Assets, Gameplay Design, UI, Art Direction, Sound Direction,",
+    "media": [
+      { "type": "video", "url": "https://www.youtube.com/embed/bK2L-pG-xy8?si=Kt8SS2RTu8RMj-xB" },
+      { "type": "image", "url": "assets/rf1.png" },
+      { "type": "image", "url": "assets/rf2.png" },
+      { "type": "image", "url": "assets/rf3.png" },
+      { "type": "image", "url": "assets/rf4.png" },
+      { "type": "image", "url": "assets/rf5.png" },
+      { "type": "image", "url": "assets/rf6.png" },
+      { "type": "image", "url": "assets/rf7.png" },
+      { "type": "image", "url": "assets/rf8.png" },
+      { "type": "image", "url": "assets/rf9.png" },
+      { "type": "image", "url": "assets/rf10.png" },
+      { "type": "image", "url": "assets/rf11.png" }
+    ]
+  },
+  {
     "title": "Blown to Bits",
     "tagline": "Retro-Style movement survival shooter. // Environment, Gameplay Design, Art Direction, Assets, UI, Level Design, Sound Design",
     "description": "One-week project, featuring modernised retro elements. Stylised cell shaded thriller environment, mixing 3D and 2D pixel art assets creatively.",
@@ -42,7 +60,7 @@
   },
   {
     "title": "PuppyCat's Quest",
-    "tagline": "Speedrun Platforming Game // Environment, Animation, Gameplay Design, Art, Illustration, UI, Development, Level Design // 2023",
+    "tagline": "Speedrun Platforming Game // Environment, Animation, Gameplay Design, Assets, Illustration, UI, Development, Level Design // 2023",
     "description": "PuppyCat's Quest is a solo game which was inspired by a Netflix original: Bee and PuppyCat. You control PuppyCat and make it through a peaceful environment in this speed-run platformer. This game premiered in an exhibition at the German University in Cairo.", 
     "media": [
       { "type": "video", "url": "assets/pcqvid.mp4", "poster": "assets/pcqthumb.png" },
