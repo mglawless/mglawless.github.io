@@ -72,15 +72,36 @@
     .project-title { font-family: 'JetBrains Mono', monospace; font-size: 2.2rem; margin-bottom: 8px; text-transform: uppercase; }
     .project-tagline { color: var(--text-dim); font-size: 0.8rem; margin-bottom: 30px; text-transform: uppercase; letter-spacing: 2px; }
     
-    .project-media-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; margin-bottom: 25px; }
-    .project-media-grid img { width: 100%; border-radius: 4px; border: 1px solid #1a1a1a; cursor: zoom-in; transition: transform 0.3s ease; }
+    /* MASONRY COLUMNS FIX */
+    .project-media-grid { 
+      column-count: 2; 
+      column-gap: 20px; 
+      margin-bottom: 25px; 
+    }
+    
+    .project-media-grid > * { 
+      display: inline-block;
+      width: 100%;
+      margin-bottom: 20px;
+      break-inside: avoid;
+    }
+
+    .project-media-grid img { 
+      width: 100%; 
+      border-radius: 4px; 
+      border: 1px solid #1a1a1a; 
+      cursor: zoom-in; 
+      transition: transform 0.3s ease; 
+      display: block;
+      /* Keeps pixel art sharp */
+      image-rendering: pixelated; 
+    }
     .project-media-grid img:hover { transform: scale(1.02); }
 
     /* --- CUSTOM VIDEO PLAYER --- */
     .video-wrapper {
       position: relative;
       width: 100%;
-      aspect-ratio: 16/9;
       background: #111;
       border-radius: 4px;
       overflow: hidden;
@@ -119,9 +140,9 @@
     .video-cover:hover .custom-play-btn { background: var(--accent); transform: scale(1.1); }
     .video-cover:hover .custom-play-btn::after { border-left-color: black; }
 
-    iframe, video { width: 100%; height: 100%; border: none; object-fit: cover; }
+    iframe, video { width: 100%; height: auto; display: block; border: none; object-fit: cover; }
 
-    .project-description { color: #aaa; font-size: 1rem; line-height: 1.8; max-width: 750px; }
+    .project-description { color: #aaa; font-size: 1rem; line-height: 1.8; max-width: 750px; clear: both; }
 
     /* --- LIGHTBOX --- */
     #lightbox {
@@ -130,7 +151,7 @@
       cursor: zoom-out; opacity: 0; transition: opacity 0.3s ease;
     }
     #lightbox.active { display: flex; opacity: 1; }
-    #lightbox img { max-width: 90%; max-height: 85%; border-radius: 4px; }
+    #lightbox img { max-width: 90%; max-height: 85%; border-radius: 4px; image-rendering: pixelated; }
 
     /* --- FOOTER --- */
     footer { position: fixed; bottom: 0; left: 0; width: 100%; z-index: 10; padding: 30px; text-align: center; pointer-events: none; }
@@ -144,6 +165,7 @@
       .main-nav { position: relative; top: 0; left: 0; padding: 40px; width: 100%; }
       .works-container { margin: 0 auto; max-width: 90%; }
       .works-title { font-size: 2.2rem; }
+      .project-media-grid { column-count: 1; }
     }
   </style>
 </head>
@@ -195,7 +217,6 @@
   </footer>
 
   <script>
-    // YouTube Playback Logic
     function playVideo(coverElement) {
       const wrapper = coverElement.parentElement;
       const iframe = wrapper.querySelector('iframe');
@@ -206,19 +227,18 @@
       setTimeout(() => { coverElement.style.display = 'none'; }, 400);
     }
 
-    // Local Video Playback Logic
     function playLocalVideo(coverElement) {
       const wrapper = coverElement.parentElement;
       const video = wrapper.querySelector('video');
       
       video.muted = false; 
-      video.controls = true; // Enables control bar
+      video.controls = true;
       video.play();
       
       coverElement.style.opacity = '0';
       setTimeout(() => { 
         coverElement.style.display = 'none'; 
-        video.style.pointerEvents = 'auto'; // Allows clicking the controls
+        video.style.pointerEvents = 'auto';
       }, 400);
     }
 
@@ -254,7 +274,6 @@
               <p class="project-tagline">${project.tagline}</p>
               <div class="project-media-grid">
                 ${project.media.map(item => {
-                  // YOUTUBE
                   if(item.type === 'video' && item.url.includes('youtube.com')) {
                     const videoId = item.url.includes('embed/') 
                       ? item.url.split('embed/')[1].split('?')[0] 
@@ -272,18 +291,16 @@
                       </div>`;
                   }
                   
-                  // LOCAL VIDEO (MP4)
                   if(item.type === 'video') {
                     return `
                       <div class="video-wrapper">
                         <div class="video-cover" style="background-image: url('${item.poster || ''}')" onclick="playLocalVideo(this)">
                           <div class="custom-play-btn"></div>
                         </div>
-                        <video src="${item.url}" loop muted playsinline style="pointer-events: none;"></video>
+                        <video src="${item.url}" loop muted playsinline style="pointer-events: none; width:100%; height:auto;"></video>
                       </div>`;
                   }
                   
-                  // IMAGE
                   return `<img src="${item.url}" alt="${project.title}" onclick="openLightbox('${item.url}')">`;
                 }).join('')}
               </div>
@@ -293,7 +310,6 @@
         })
         .catch(err => console.error("Error loading works:", err));
 
-      // Email Copy Logic
       const emailBtn = document.getElementById('copyEmail');
       emailBtn.addEventListener('click', () => {
         navigator.clipboard.writeText('maroggebriel@gmail.com').then(() => {
@@ -302,7 +318,6 @@
         });
       });
 
-      // Nav Transition Logic
       document.querySelectorAll('.transition-link').forEach(link => {
         link.addEventListener('click', (e) => {
           if (link.href === window.location.href) return;
