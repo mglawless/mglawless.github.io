@@ -27,6 +27,25 @@
     ]
   },
   {
+    "title": "VOXEL ASSETS",
+    "tagline": "Voxel Style 3D Assets and Environment // Water Shader // Minecraft Style Terrain // Textures // Skybox  ",
+    "media": [
+      { "type": "image", "url": "assets/voxel.png" },
+      { "type": "image", "url": "assets/voxel2.png" },
+      { "type": "image", "url": "assets/voxel3.png" },
+      { "type": "image", "url": "assets/voxel8.png" },
+      { "type": "image", "url": "assets/voxel7.png" },
+      { "type": "image", "url": "assets/voxel4.png" },
+      { "type": "image", "url": "assets/voxel5.png" },
+      { "type": "image", "url": "assets/voxel6.png" },
+      { "type": "image", "url": "assets/vox1.png" },
+      { "type": "image", "url": "assets/vox2.png" },
+      { "type": "image", "url": "assets/vox3.png" },
+      { "type": "image", "url": "assets/vox4.png" },
+      { "type": "image", "url": "assets/vox5.png" }
+    ]
+  },
+  {
     "title": "SLINKO",
     "tagline": "​​​​​​​Fling elemental slimes, and solve tight physics puzzles. // Environment, UI, Gameplay Design, Art Direction, Level Design, Sound Design and Direction",
     "media": [
