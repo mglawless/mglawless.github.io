@@ -29,6 +29,8 @@
   {
     "title": "VOXEL ASSETS",
     "tagline": "Voxel Style 3D Assets and Environment // Water Shader // Minecraft Style Terrain // Textures // Skybox  ",
+      "description": "A collection of assets made in a voxel style, including a terrain generator and scatter script as well as a grid system script for the tile assets.",
+
     "media": [
       { "type": "image", "url": "assets/voxel.png" },
       { "type": "image", "url": "assets/voxel2.png" },
@@ -42,7 +44,14 @@
       { "type": "image", "url": "assets/vox2.png" },
       { "type": "image", "url": "assets/vox3.png" },
       { "type": "image", "url": "assets/vox4.png" },
-      { "type": "image", "url": "assets/vox5.png" }
+      { "type": "image", "url": "assets/vox5.png" },
+      { "type": "image", "url": "assets/tile3.png" },
+      { "type": "image", "url": "assets/tile2.png" },
+      { "type": "image", "url": "assets/tile1.png" },
+      { "type": "image", "url": "assets/tile5.png" },
+      { "type": "image", "url": "assets/tile4.png" },
+      { "type": "image", "url": "assets/tile6.png" },
+      { "type": "image", "url": "assets/tile7.png" }
     ]
   },
   {
