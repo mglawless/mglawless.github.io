@@ -11,7 +11,7 @@
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap');
     :root { 
       --accent: #26c9df; 
-      --text-dim: #999;
+      --text-dim: #999; /* Brightened from #666 */
       --nav-width: 250px; 
     }
     
@@ -34,6 +34,7 @@
       opacity: 1; 
     }
 
+    /* --- SIDEBAR NAVIGATION --- */
     .main-nav { 
       position: fixed; top: 40px; left: 40px; z-index: 10; 
       display: flex; flex-direction: column; gap: 20px; width: var(--nav-width);
@@ -60,6 +61,7 @@
     .copy-link.copied .label { opacity: 0; transform: translateY(-5px); }
     .copy-link.copied .status { opacity: 1; transform: translateY(0); }
 
+    /* --- CONTENT AREA --- */
     .content-wrapper { position: relative; z-index: 2; width: 100%; padding-top: 100px; padding-bottom: 200px; }
     .works-container { max-width: 1000px; margin-left: calc(var(--nav-width) + 100px); margin-right: 60px; }
 
@@ -67,66 +69,185 @@
     .works-title { font-family: 'JetBrains Mono', monospace; font-size: 3rem; margin-bottom: 15px; text-transform: uppercase; }
     .works-subtitle { color: #bbb; font-size: 1.1rem; max-width: 600px; line-height: 1.6; }
 
+    /* --- TERMINAL INDEX --- */
     #index-container {
-      position: relative; width: 100%; height: 350px;
+      position: relative; 
+      width: 100%; 
+      height: 350px;
       background: linear-gradient(90deg, #050505 0%, rgba(15,15,15,0.4) 100%); 
-      border: 1px solid #1a1a1a; margin-top: 40px; overflow: hidden; display: flex;
+      border: 1px solid #1a1a1a;
+      margin-top: 40px; 
+      overflow: hidden;
+      display: flex;
     }
 
-    #index-ui { flex: 1; position: relative; z-index: 2; padding: 40px; display: flex; flex-direction: column; }
-    .index-label { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; letter-spacing: 5px; color: var(--accent); margin-bottom: 30px; text-transform: uppercase; }
+    #index-ui { 
+      flex: 1;
+      position: relative;
+      z-index: 2; 
+      padding: 40px; 
+      display: flex;
+      flex-direction: column;
+    }
+
+    .index-label { 
+      font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; 
+      letter-spacing: 5px; color: var(--accent); margin-bottom: 30px; text-transform: uppercase; 
+    }
 
     #auto-index { 
-      display: flex; flex-direction: column; flex-wrap: wrap; max-height: 220px; gap: 12px 60px;
-      pointer-events: auto; counter-reset: item-counter; overflow-y: auto; scrollbar-width: none;
+      display: flex;
+      flex-direction: column;
+      flex-wrap: wrap; 
+      max-height: 220px;
+      gap: 12px 60px;
+      pointer-events: auto;
+      counter-reset: item-counter;
+      overflow-y: auto;
+      scrollbar-width: none; /* Hides scrollbar in Firefox */
     }
+    /* Hides scrollbar in Chrome/Safari */
     #auto-index::-webkit-scrollbar { display: none; }
 
     .index-item { 
-      font-family: 'JetBrains Mono', monospace; color: #aaa; text-decoration: none; font-size: 0.8rem; 
-      transition: 0.2s ease; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center;
+      font-family: 'JetBrains Mono', monospace;
+      color: #aaa; /* Brightened from #666 */
+      text-decoration: none; 
+      font-size: 0.8rem; 
+      transition: 0.2s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
     }
-    .index-item::before {
-      counter-increment: item-counter; content: "ID_" counter(item-counter, decimal-leading-zero);
-      font-size: 0.6rem; color: var(--accent); margin-right: 15px; opacity: 0.6; display: inline-block; width: 45px;
-    }
-    .index-item:hover { color: #fff; transform: translateX(8px); }
 
-    #three-canvas-container { width: 40%; height: 100%; border-left: 1px solid #1a1a1a; z-index: 1; }
+    .index-item::before {
+      counter-increment: item-counter;
+      content: "ID_" counter(item-counter, decimal-leading-zero);
+      font-size: 0.6rem;
+      color: var(--accent);
+      margin-right: 15px;
+      opacity: 0.6;
+      display: inline-block;
+      width: 45px;
+    }
+
+    .index-item:hover { 
+      color: #fff; 
+      transform: translateX(8px); 
+    }
+
+    #three-canvas-container { 
+      width: 40%; 
+      height: 100%; 
+      border-left: 1px solid #1a1a1a;
+      z-index: 1; 
+    }
 
     .project-list-wrapper { display: flex; flex-direction: column; gap: 150px; }
     .project-entry { width: 100%; scroll-margin-top: 100px; }
     .project-title { font-family: 'JetBrains Mono', monospace; font-size: 2.2rem; margin-bottom: 8px; text-transform: uppercase; }
     .project-tagline { color: #888; font-size: 0.8rem; margin-bottom: 30px; text-transform: uppercase; letter-spacing: 2px; }
     
-    .project-media-grid { display: grid; grid-template-columns: repeat(12, 1fr); grid-gap: 8px; grid-auto-flow: dense; margin-bottom: 25px; }
-    .project-media-grid > * { grid-column: span 6; position: relative; overflow: hidden; background: #111; transition: transform 0.3s ease; border: 1px solid #1a1a1a; border-radius: 2px; }
-    .project-media-grid .video-wrapper { grid-column: span 12; aspect-ratio: 16 / 9; }
-    .project-media-grid img { width: 100%; height: 100%; object-fit: cover; display: block; aspect-ratio: 16 / 11; cursor: zoom-in; }
-    .project-media-grid img:hover { z-index: 10; transform: scale(1.02); }
+    .project-media-grid { 
+      display: grid;
+      grid-template-columns: repeat(12, 1fr); 
+      grid-gap: 8px; 
+      grid-auto-flow: dense; 
+      margin-bottom: 25px;
+    }
+    
+    .project-media-grid > * { 
+      grid-column: span 6;
+      position: relative;
+      overflow: hidden;
+      background: #111;
+      transition: transform 0.3s ease;
+      border: 1px solid #1a1a1a;
+      border-radius: 2px;
+    }
+
+    .project-media-grid .video-wrapper {
+      grid-column: span 12; 
+      aspect-ratio: 16 / 9;
+    }
+
+    .project-media-grid img { 
+      width: 100%; height: 100%;
+      object-fit: cover; display: block;
+      aspect-ratio: 16 / 11; 
+      cursor: zoom-in;
+    }
+
+    .project-media-grid img:hover { 
+      z-index: 10; transform: scale(1.02); 
+    }
 
     @media (min-width: 900px) {
       .project-media-grid > * { grid-column: span 4; }
       .project-media-grid .video-wrapper { grid-column: span 8; } 
     }
 
+    /* --- VIDEO PLAYER & HOVER FIX --- */
     .video-wrapper { position: relative; cursor: pointer; }
-    .video-cover { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; z-index: 5; display: flex; align-items: center; justify-content: center; transition: opacity 0.4s ease; }
-    .custom-play-btn { width: 60px; height: 60px; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px); border: 1px solid #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; }
-    .custom-play-btn::after { content: ''; border-top: 10px solid transparent; border-bottom: 10px solid transparent; border-left: 18px solid white; margin-left: 5px; }
+    .video-cover {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      background-size: cover; background-position: center;
+      z-index: 5; display: flex; align-items: center; justify-content: center;
+      transition: opacity 0.4s ease;
+    }
+    .custom-play-btn {
+      width: 60px; height: 60px; background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(5px); border: 1px solid #fff;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      transition: all 0.3s ease;
+    }
+    .custom-play-btn::after {
+      content: ''; border-top: 10px solid transparent; border-bottom: 10px solid transparent;
+      border-left: 18px solid white; margin-left: 5px;
+    }
+
+    /* FIX: Glow effect on hover */
+    .video-wrapper:hover .custom-play-btn {
+      border-color: var(--accent);
+      box-shadow: 0 0 15px rgba(38, 201, 223, 0.4);
+      transform: scale(1.1);
+    }
+    .video-wrapper:hover .custom-play-btn::after {
+      border-left-color: var(--accent);
+    }
 
     iframe, video { width: 100%; height: 100%; object-fit: cover; border: none; }
+
     .project-description { color: #bbb; font-size: 1rem; line-height: 1.8; max-width: 750px; }
 
-    #lightbox { position: fixed; z-index: 10000; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.95); display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; }
+    /* --- LIGHTBOX & ARROWS --- */
+    #lightbox {
+      position: fixed; z-index: 10000; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.95); display: none; align-items: center; justify-content: center;
+      opacity: 0; transition: opacity 0.3s ease;
+    }
     #lightbox.active { display: flex; opacity: 1; }
     #lightbox img { max-width: 85%; max-height: 85%; border-radius: 4px; object-fit: contain; z-index: 10001; }
-    .lightbox-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: none; border: none; color: white; font-size: 3rem; cursor: pointer; z-index: 10005; padding: 20px; transition: 0.3s; font-family: 'JetBrains Mono', monospace; opacity: 0.5; }
+
+    .lightbox-arrow {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      background: none; border: none; color: white; font-size: 3rem;
+      cursor: pointer; z-index: 10005; padding: 20px; transition: 0.3s;
+      font-family: 'JetBrains Mono', monospace; opacity: 0.5;
+    }
     .lightbox-arrow:hover { opacity: 1; color: var(--accent); }
     .arrow-left { left: 20px; }
     .arrow-right { right: 20px; }
 
-    #back-to-top { position: fixed; bottom: 40px; right: 40px; width: 45px; height: 45px; background: rgba(0,0,0,0.8); border: 1px solid var(--accent); color: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0; visibility: hidden; transition: 0.4s ease; z-index: 100; text-decoration: none; font-family: 'JetBrains Mono', monospace; }
+    #back-to-top {
+      position: fixed; bottom: 40px; right: 40px; width: 45px; height: 45px;
+      background: rgba(0,0,0,0.8); border: 1px solid var(--accent);
+      color: var(--accent); border-radius: 50%; display: flex;
+      align-items: center; justify-content: center; cursor: pointer;
+      opacity: 0; visibility: hidden; transition: 0.4s ease; z-index: 100;
+      text-decoration: none; font-family: 'JetBrains Mono', monospace;
+    }
     #back-to-top.visible { opacity: 1; visibility: visible; }
 
     footer { position: fixed; bottom: 0; left: 0; width: 100%; z-index: 10; padding: 30px; text-align: center; pointer-events: none; }
@@ -174,6 +295,7 @@
       <header class="works-header">
         <h1 class="works-title">WORKS</h1>
         <p class="works-subtitle">A collection of games, art, and digital worlds.</p>
+        
         <div id="index-container">
           <div id="index-ui">
             <div class="index-label">System_Index</div>
@@ -182,6 +304,7 @@
           <div id="three-canvas-container"></div>
         </div>
       </header>
+
       <div class="project-list-wrapper" id="works-list"></div>
     </main>
   </div>
@@ -197,6 +320,11 @@
             <polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"></polygon>
           </svg>
         </a>
+        <a href="https://steamcommunity.com/id/gunslinging1/" target="_blank">
+          <svg class="social-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2a10 10 0 0 0-9.92 8.79l3.5 1.54a3.5 3.5 0 0 1 6.3 2.11l4.47 2a3.5 3.5 0 1 1-.44 1.27l-4.47-2a3.5 3.5 0 0 1-5.18-3.04l-3.53-1.55A10 10 0 1 0 12 2z"/>
+          </svg>
+        </a>
       </div>
       <div class="footer-text">©2026 / LAWLESS / MARWAN GEBRIEL</div>
     </div>
@@ -206,23 +334,46 @@
     let allMediaUrls = [];
     let currentMediaIndex = 0;
 
-    // NO LONGER BLOCKING: Render images as normal, compress only if needed
     function initIndexParticles() {
       const container = document.getElementById('three-canvas-container');
-      if(!container) return;
       const scene = new THREE.Scene();
       const camera = new THREE.PerspectiveCamera(75, container.offsetWidth / container.offsetHeight, 0.1, 1000);
       const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
       renderer.setSize(container.offsetWidth, container.offsetHeight);
       container.appendChild(renderer.domElement);
+
       const geometry = new THREE.IcosahedronGeometry(140, 1);
       const wireframe = new THREE.WireframeGeometry(geometry);
       const lineMat = new THREE.LineBasicMaterial({ color: 0x26c9df, transparent: true, opacity: 0.2 });
       const core = new THREE.LineSegments(wireframe, lineMat);
       scene.add(core);
+
+      const starGeo = new THREE.BufferGeometry();
+      const starPos = [];
+      for(let i=0; i<300; i++) {
+        starPos.push(THREE.MathUtils.randFloatSpread(400), THREE.MathUtils.randFloatSpread(400), THREE.MathUtils.randFloatSpread(400));
+      }
+      starGeo.setAttribute('position', new THREE.Float32BufferAttribute(starPos, 3));
+      const starMat = new THREE.PointsMaterial({ color: 0x26c9df, size: 1.5, transparent: true, opacity: 0.5 });
+      const stars = new THREE.Points(starGeo, starMat);
+      scene.add(stars);
+
       camera.position.z = 400;
-      function animate() { requestAnimationFrame(animate); core.rotation.y += 0.004; renderer.render(scene, camera); }
+
+      function animate() {
+        requestAnimationFrame(animate);
+        core.rotation.y += 0.004;
+        core.rotation.x += 0.002;
+        stars.rotation.y -= 0.001;
+        renderer.render(scene, camera);
+      }
       animate();
+
+      window.addEventListener('resize', () => {
+        camera.aspect = container.offsetWidth / container.offsetHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(container.offsetWidth, container.offsetHeight);
+      });
     }
 
     function playVideo(coverElement) {
@@ -233,10 +384,19 @@
       setTimeout(() => { coverElement.style.display = 'none'; }, 400);
     }
 
+    function playLocalVideo(coverElement) {
+      const video = coverElement.parentElement.querySelector('video');
+      video.muted = false; video.controls = true; video.play();
+      coverElement.style.opacity = '0';
+      setTimeout(() => { coverElement.style.display = 'none'; }, 400);
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
       const overlay = document.getElementById('transition-overlay');
       const lightbox = document.getElementById('lightbox');
       const lightboxImg = document.getElementById('lightboxImg');
+      const backToTop = document.getElementById('back-to-top');
+
       setTimeout(() => { overlay.style.opacity = '0'; }, 100);
 
       window.openLightbox = (url) => {
@@ -244,6 +404,31 @@
         lightboxImg.src = url;
         lightbox.classList.add('active');
       };
+
+      const closeLightbox = (e) => {
+        if (e.target.tagName !== 'BUTTON') lightbox.classList.remove('active');
+      };
+      lightbox.addEventListener('click', closeLightbox);
+
+      const navigate = (dir) => {
+        currentMediaIndex = (currentMediaIndex + dir + allMediaUrls.length) % allMediaUrls.length;
+        lightboxImg.src = allMediaUrls[currentMediaIndex];
+      };
+
+      document.getElementById('prevBtn').addEventListener('click', (e) => { e.stopPropagation(); navigate(-1); });
+      document.getElementById('nextBtn').addEventListener('click', (e) => { e.stopPropagation(); navigate(1); });
+
+      document.addEventListener('keydown', (e) => {
+        if (!lightbox.classList.contains('active')) return;
+        if (e.key === "ArrowLeft") navigate(-1);
+        if (e.key === "ArrowRight") navigate(1);
+        if (e.key === "Escape") lightbox.classList.remove('active');
+      });
+
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 500) backToTop.classList.add('visible');
+        else backToTop.classList.remove('visible');
+      });
 
       fetch('works.json')
         .then(res => res.json())
@@ -255,31 +440,40 @@
             <a href="#proj-${idx}" class="index-item">${project.title}</a>
           `).join('');
 
-          // INSTANT RENDERING: No "await" inside the loop
           container.innerHTML = data.map((project, idx) => {
+            project.media.forEach(m => { if(m.type === 'image') allMediaUrls.push(m.url); });
+
             return `
             <section class="project-entry" id="proj-${idx}">
               <h1 class="project-title">${project.title}</h1>
               <p class="project-tagline">${project.tagline}</p>
               <div class="project-media-grid">
                 ${project.media.map(item => {
-                  if(item.type === 'image') {
-                    allMediaUrls.push(item.url);
-                    return `<img src="${item.url}" loading="lazy" alt="${project.title}" onclick="openLightbox('${item.url}')">`;
+                  if(item.type === 'video' && item.url.includes('youtube.com')) {
+                    const videoId = item.url.includes('embed/') ? item.url.split('embed/')[1].split('?')[0] : item.url.split('v=')[1].split('&')[0];
+                    return `
+                      <div class="video-wrapper" onclick="playVideo(this.querySelector('.video-cover'))">
+                        <div class="video-cover" style="background-image: url('https://img.youtube.com/vi/${videoId}/maxresdefault.jpg')">
+                          <div class="custom-play-btn"></div>
+                        </div>
+                        <iframe src="https://www.youtube.com/embed/${videoId}?modestbranding=1&rel=0&color=white" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                      </div>`;
                   }
-                  if(item.type === 'video' && item.url.includes('youtube')) {
-                    const videoId = item.url.split('v=')[1] || item.url.split('embed/')[1];
-                    return `<div class="video-wrapper" onclick="playVideo(this.querySelector('.video-cover'))">
-                              <div class="video-cover" style="background-image: url('https://img.youtube.com/vi/${videoId}/maxresdefault.jpg')"><div class="custom-play-btn"></div></div>
-                              <iframe src="https://www.youtube.com/embed/${videoId}?modestbranding=1" allowfullscreen></iframe>
-                            </div>`;
+                  if(item.type === 'video') {
+                    return `
+                      <div class="video-wrapper" onclick="playLocalVideo(this.querySelector('.video-cover'))">
+                        <div class="video-cover" style="background-image: url('${item.poster || ''}')">
+                          <div class="custom-play-btn"></div>
+                        </div>
+                        <video src="${item.url}" loop muted playsinline></video>
+                      </div>`;
                   }
-                  return '';
+                  return `<img src="${item.url}" alt="${project.title}" onclick="openLightbox('${item.url}')">`;
                 }).join('')}
               </div>
-              <p class="project-description">${project.description || ''}</p>
-            </section>`;
-          }).join('');
+              ${project.description ? `<p class="project-description">${project.description}</p>` : ''}
+            </section>
+          `}).join('');
 
           initIndexParticles();
         });
@@ -288,6 +482,14 @@
         navigator.clipboard.writeText('maroggebriel@gmail.com').then(() => {
           this.classList.add('copied');
           setTimeout(() => this.classList.remove('copied'), 2000);
+        });
+      });
+
+      document.querySelectorAll('.transition-link').forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          overlay.style.opacity = '1';
+          setTimeout(() => { window.location.href = link.href; }, 600);
         });
       });
     });
