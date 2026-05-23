@@ -94,7 +94,8 @@
     #three-canvas-container { width: 40%; height: 100%; border-left: 1px solid #1a1a1a; z-index: 1; }
 
     .project-list-wrapper { display: flex; flex-direction: column; gap: 150px; }
-    .project-entry { width: 100%; scroll-margin-top: 100px; }
+    .project-entry { width: 100%; scroll-margin-top: 100px; opacity: 0; transform: translateY(20px); transition: opacity 0.8s ease, transform 0.8s ease; }
+    .project-entry.visible { opacity: 1; transform: translateY(0); }
     .project-title { font-family: 'JetBrains Mono', monospace; font-size: 2.2rem; margin-bottom: 8px; text-transform: uppercase; }
     .project-tagline { color: #888; font-size: 0.8rem; margin-bottom: 30px; text-transform: uppercase; letter-spacing: 2px; }
     
@@ -119,7 +120,6 @@
 
     .project-description { color: #bbb; font-size: 1rem; line-height: 1.8; max-width: 750px; margin-bottom: 20px; }
 
-    /* --- CASE STUDY BUTTON --- */
     .case-study-btn {
       display: inline-block; padding: 10px 20px; border: 1px solid var(--accent); color: var(--accent);
       text-decoration: none; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;
@@ -320,7 +320,7 @@
 
       fetch('works.json')
         .then(res => res.json())
-        .then(data => {
+        .then(async (data) => {
           const container = document.getElementById('works-list');
           const indexList = document.getElementById('auto-index');
           
@@ -328,11 +328,14 @@
             <a href="#proj-${idx}" class="index-item">${project.title}</a>
           `).join('');
 
-          container.innerHTML = data.map((project, idx) => {
+          for (const [idx, project] of data.entries()) {
             project.media.forEach(m => { if(m.type === 'image') allMediaUrls.push(m.url); });
 
-            return `
-            <section class="project-entry" id="proj-${idx}">
+            const section = document.createElement('section');
+            section.className = 'project-entry';
+            section.id = `proj-${idx}`;
+            
+            section.innerHTML = `
               <h1 class="project-title">${project.title}</h1>
               <p class="project-tagline">${project.tagline}</p>
               <div class="project-media-grid">
@@ -356,14 +359,22 @@
                         <video src="${item.url}" loop muted playsinline></video>
                       </div>`;
                   }
-                  return `<img src="${item.url}" alt="${project.title}" onclick="openLightbox('${item.url}')">`;
+                  const webpUrl = item.url.replace(/\.(jpg|png|jpeg)$/i, '.webp');
+                  return `
+                    <picture onclick="openLightbox('${item.url}')">
+                      <source srcset="${webpUrl}" type="image/webp">
+                      <img src="${item.url}" alt="${project.title}" loading="lazy">
+                    </picture>`;
                 }).join('')}
               </div>
               ${project.description ? `<p class="project-description">${project.description}</p>` : ''}
               ${project.caseStudy ? `<a href="${project.caseStudy}" class="case-study-btn" target="_blank">Read Case Study →</a>` : ''}
-            </section>
             `;
-          }).join('');
+            
+            container.appendChild(section);
+            await new Promise(resolve => setTimeout(resolve, 200));
+            section.classList.add('visible');
+          }
 
           initIndexParticles();
         });
