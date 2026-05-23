@@ -3,271 +3,138 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MG. Lawless</title>
+  <title>Works | MG. Lawless</title>
   <link rel="icon" type="image/jpeg" href="favicon.jpg">
-  <link rel="preconnect" href="https://www.youtube.com">
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700&family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap');
-    :root {
-      --accent: #26c9df;
-      --text-dim: #444; 
+    :root { 
+      --accent: #26c9df; 
+      --text-dim: #999;
+      --nav-width: 250px; 
     }
     
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body, html { 
+    html { scroll-behavior: smooth; }
+    
+    body { 
       background: #000; 
       font-family: 'Inter', -apple-system, sans-serif; 
-      color: white;
-      height: 100%;
-      width: 100%;
-      overflow: hidden; 
+      color: white; 
+      min-height: 100vh; 
+      overflow-x: hidden; 
     }
 
-    #transition-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: #000;
-      z-index: 9999;
-      pointer-events: none;
-      transition: opacity 0.6s ease-in-out;
-      opacity: 1;
+    #transition-overlay { 
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+      background: #000; z-index: 9999; 
+      pointer-events: none; 
+      transition: opacity 0.6s ease-in-out; 
+      opacity: 1; 
     }
 
-    canvas { display: block; position: fixed; top: 0; left: 0; z-index: 1; outline: none; }
-    
     /* --- SIDEBAR --- */
-    .main-sidebar { 
-      position: fixed; 
-      top: 40px; 
-      left: 40px; 
-      z-index: 20; 
-      display: flex; 
-      flex-direction: column; 
-      gap: 20px; 
+    .main-nav { 
+      position: fixed; top: 40px; left: 40px; z-index: 10; 
+      display: flex; flex-direction: column; gap: 20px; width: var(--nav-width);
     }
-
-    .nav-logo { 
-      font-weight: 800; 
-      font-size: 1.2rem; 
-      letter-spacing: 3px; 
-      text-transform: uppercase; 
-      border-left: 3px solid var(--accent); 
-      padding-left: 15px; 
-      line-height: 1.2;
-    }
-
-    .nav-links { 
-      display: flex; 
-      flex-direction: column; 
-      gap: 12px; 
-      font-size: 0.85rem; 
-      color: #666; 
-    }
-
-    .nav-links a { 
-      text-decoration: none;
-      color: inherit;
-      cursor: pointer; 
-      transition: 0.3s ease; 
-      width: fit-content; 
-    }
+    .nav-logo { font-weight: 800; font-size: 1.2rem; letter-spacing: 3px; text-transform: uppercase; border-left: 3px solid var(--accent); padding-left: 15px; }
+    .nav-links { display: flex; flex-direction: column; gap: 12px; font-size: 0.85rem; color: var(--text-dim); }
+    .nav-links a { text-decoration: none; color: inherit; transition: 0.3s ease; width: fit-content; }
     .nav-links a:hover { color: #fff; transform: translateX(5px); }
 
     .copy-link {
-      color: var(--accent);
-      cursor: pointer;
-      position: relative;
-      height: 1.2rem; 
-      display: flex;
-      align-items: center;
-      transition: color 0.4s ease-in-out, transform 0.3s ease;
-      width: fit-content;
+      color: var(--accent); cursor: pointer; position: relative; height: 1.2rem; display: flex; align-items: center;
+      transition: color 0.4s ease-in-out, transform 0.3s ease; width: fit-content;
     }
     .copy-link:hover { transform: translateX(5px); }
     .copy-link .status { 
-      position: absolute; left: 0; opacity: 0; color: #4ade80; font-weight: bold;
-      pointer-events: none; white-space: nowrap; transform: translateY(5px);
-      transition: opacity 0.3s ease, transform 0.3s ease;
+      position: absolute; left: 0; opacity: 0; color: #4ade80; font-weight: bold; pointer-events: none; 
+      white-space: nowrap; transform: translateY(5px); transition: opacity 0.3s ease, transform 0.3s ease;
     }
     .copy-link.copied .label { opacity: 0; transform: translateY(-5px); }
     .copy-link.copied .status { opacity: 1; transform: translateY(0); }
 
-    /* --- CONSOLE LAYER --- */
-    .console-fixed-layer {
-      position: fixed;
-      top: 40px; 
-      left: 50%;
-      transform: translateX(-50%);
-      width: 60%; 
-      max-width: 800px;
-      z-index: 15;
-      text-align: center;
-      pointer-events: none;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      transition: background 0.5s ease;
-    }
-
-    .console-text-container {
-      font-family: 'JetBrains Mono', monospace;
-      font-weight: bold;
-      color: var(--accent);
-      font-size: 1.8rem;
-      line-height: 1.2;
-      display: block; 
-    }
-
-    #typewriter { display: inline; white-space: normal; }
-
-    .cursor {
-      display: inline-block;
-      width: 2px;
-      height: 1.6rem;
-      background: var(--accent);
-      margin-left: 8px;
-      animation: blink 1s infinite;
-      vertical-align: middle;
-    }
-    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-
-    #prompt-click {
-      display: inline-block;
-      font-size: 1.5rem; 
-      color: #fff;
-      margin-top: 25px;
-      opacity: 0;
-      cursor: pointer;
-      pointer-events: auto;
-      transition: opacity 0.5s ease, transform 0.3s ease, text-shadow 0.3s ease;
-      letter-spacing: 6px;
-      font-family: 'JetBrains Mono', monospace;
-      font-weight: bold;
-      text-transform: uppercase;
-    }
+    /* --- CONTENT --- */
+    .content-wrapper { position: relative; z-index: 2; width: 100%; padding-top: 100px; padding-bottom: 200px; }
+    .works-container { max-width: 1000px; margin-left: calc(var(--nav-width) + 100px); margin-right: 60px; }
+    .works-title { font-family: 'JetBrains Mono', monospace; font-size: 3rem; margin-bottom: 15px; text-transform: uppercase; }
     
-    #prompt-click.visible { 
-      opacity: 0.8; 
-      text-shadow: 0 0 15px var(--accent);
-      animation: breathe 2s infinite ease-in-out; 
-    }
+    /* --- INDEX & PROJECTS --- */
+    #index-container { position: relative; width: 100%; height: 350px; background: linear-gradient(90deg, #050505 0%, rgba(15,15,15,0.4) 100%); border: 1px solid #1a1a1a; margin-top: 40px; display: flex; }
+    #index-ui { flex: 1; z-index: 2; padding: 40px; display: flex; flex-direction: column; }
+    .index-label { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; letter-spacing: 5px; color: var(--accent); margin-bottom: 30px; text-transform: uppercase; }
+    #auto-index { display: flex; flex-direction: column; flex-wrap: wrap; max-height: 220px; gap: 12px 60px; counter-reset: item-counter; overflow-y: auto; scrollbar-width: none; }
+    #auto-index::-webkit-scrollbar { display: none; }
+    .index-item { font-family: 'JetBrains Mono', monospace; color: #aaa; text-decoration: none; font-size: 0.8rem; transition: 0.2s ease; text-transform: uppercase; display: flex; align-items: center; }
+    .index-item::before { counter-increment: item-counter; content: "ID_" counter(item-counter, decimal-leading-zero); font-size: 0.6rem; color: var(--accent); margin-right: 15px; opacity: 0.6; width: 45px; }
+    .index-item:hover { color: #fff; transform: translateX(8px); }
+
+    #three-canvas-container { width: 40%; height: 100%; border-left: 1px solid #1a1a1a; }
+    .project-list-wrapper { display: flex; flex-direction: column; gap: 150px; margin-top: 100px; }
+    .project-title { font-family: 'JetBrains Mono', monospace; font-size: 2.2rem; margin-bottom: 8px; text-transform: uppercase; }
+    .project-tagline { color: #888; font-size: 0.8rem; margin-bottom: 30px; text-transform: uppercase; letter-spacing: 2px; }
     
-    @keyframes breathe {
-      0%, 100% { opacity: 0.4; transform: scale(1); }
-      50% { opacity: 1; transform: scale(1.05); }
+    .project-media-grid { display: grid; grid-template-columns: repeat(12, 1fr); grid-gap: 8px; margin-bottom: 25px; }
+    .project-media-grid > * { grid-column: span 6; position: relative; border: 1px solid #1a1a1a; border-radius: 2px; overflow: hidden; }
+    .project-description { color: #bbb; font-size: 1rem; line-height: 1.8; max-width: 750px; }
+
+    /* CASE STUDY BUTTON */
+    .case-study-btn {
+      display: inline-block; margin-top: 20px; padding: 10px 20px;
+      border: 1px solid var(--accent); color: var(--accent); text-decoration: none;
+      font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; text-transform: uppercase;
+      transition: 0.3s ease;
     }
+    .case-study-btn:hover { background: var(--accent); color: #000; }
 
-    #prompt-click:hover { opacity: 1; animation: none; transform: scale(1.1); }
-
-    #dialogue-container {
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      pointer-events: auto;
-      margin-top: 30px;
-      width: 100%;
-    }
-
-    .dialogue-options {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      font-size: 0.9rem;
-      font-family: 'JetBrains Mono', monospace;
-    }
-
-    .dialogue-btn {
-      color: #fff; 
-      cursor: pointer;
-      transition: all 0.2s ease;
-      text-align: center;
-    }
-    .dialogue-btn:hover { color: var(--accent); transform: scale(1.05); }
-
-    footer {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      z-index: 10;
-      padding: 30px;
-      text-align: center;
-      pointer-events: none;
-    }
-
-    .footer-content {
-      pointer-events: auto;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 15px;
-    }
-
+    /* --- FOOTER (THE BEST VERSION) --- */
+    footer { position: fixed; bottom: 0; left: 0; width: 100%; z-index: 10; padding: 30px; text-align: center; pointer-events: none; }
+    .footer-content { pointer-events: auto; display: flex; flex-direction: column; align-items: center; gap: 15px; }
     .social-links { display: flex; gap: 20px; align-items: center; }
     .social-icon { width: 24px; height: 24px; stroke: #444; fill: none; transition: 0.3s; }
     .social-links a:hover .social-icon { stroke: #fff; transform: translateY(-3px); }
     .footer-text { font-size: 0.65rem; color: #444; letter-spacing: 2px; text-transform: uppercase; }
 
-    /* --- MOBILE REFINEMENT --- */
+    /* Responsive */
     @media (max-width: 1100px) {
-      .main-sidebar { 
-        position: relative; 
-        top: 0; left: 0; padding: 40px; width: 100%; 
-      }
-
-      .console-fixed-layer { 
-        width: 100%; 
-        top: 50%; 
-        transform: translate(-50%, -50%); 
-        padding: 20px;
-        /* Removed the heavy box. Using a subtle glow/blur around the text area only */
-        background: radial-gradient(circle, rgba(0,0,0,0.6) 0%, transparent 70%);
-        backdrop-filter: none; 
-      } 
-
-      .console-text-container { font-size: 1.4rem; }
-
-      .lil-gui {
-        --width: 160px !important;
-        top: auto !important;
-        bottom: 100px !important; 
-        right: 15px !important;
-      }
+      .main-nav { position: relative; padding: 40px; width: 100%; }
+      .works-container { margin: 0 auto; max-width: 90%; }
+      #index-container { flex-direction: column; height: auto; }
+      #three-canvas-container { width: 100%; height: 200px; border-left: none; border-top: 1px solid #1a1a1a; }
     }
   </style>
 </head>
 <body>
 
   <div id="transition-overlay"></div>
-
-  <div class="main-sidebar">
+  
+  <nav class="main-nav">
     <div class="nav-logo">MG. Lawless</div>
-    <nav class="nav-links">
-      <a href="./" class="transition-link" style="color: #fff;">Home</a>
-      <a href="works.html" class="transition-link">Works</a>
+    <div class="nav-links">
+      <a href="./" class="transition-link">Home</a>
+      <a href="works.html" class="transition-link" style="color: #fff;">Works</a>
       <a href="blog.html" class="transition-link">Blog</a>
       <div class="copy-link" id="copyEmail">
         <span class="label">Copy Email</span>
         <span class="status">Email Copied ✓</span>
       </div>
-    </nav>
-  </div>
+    </div>
+  </nav>
 
-  <div class="console-fixed-layer">
-    <div class="console-text-container">
-      <span id="typewriter"></span><span class="cursor"></span>
-    </div>
-    
-    <span id="prompt-click">[ INITIALIZE ]</span>
-    
-    <div id="dialogue-container">
-      <div class="dialogue-options" id="options-list"></div>
-    </div>
+  <div class="content-wrapper">
+    <main class="works-container">
+      <h1 class="works-title">WORKS</h1>
+      <div id="index-container">
+        <div id="index-ui">
+          <div class="index-label">System_Index</div>
+          <div id="auto-index"></div>
+        </div>
+        <div id="three-canvas-container"></div>
+      </div>
+      <div class="project-list-wrapper" id="works-list"></div>
+    </main>
   </div>
 
   <footer>
@@ -286,268 +153,50 @@
           </svg>
         </a>
       </div>
-      <div class="footer-text">©2026 / All Right Reserved / LAWLESS / MARWAN GEBRIEL</div>
+      <div class="footer-text">©2026 / All Rights Reserved / LAWLESS / MARWAN GEBRIEL</div>
     </div>
   </footer>
 
-  <script type="importmap">
-    {
-      "imports": {
-        "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
-        "lil-gui": "https://unpkg.com/lil-gui@0.19.1/dist/lil-gui.esm.js"
-      }
-    }
-  </script>
-
   <script type="module">
-    import * as THREE from 'three';
-    import { GUI } from 'lil-gui';
+    // Initialization and data fetching
+    fetch('works.json')
+      .then(res => res.json())
+      .then(data => {
+        const container = document.getElementById('works-list');
+        const indexList = document.getElementById('auto-index');
+        
+        indexList.innerHTML = data.map((project, idx) => `
+          <a href="#proj-${idx}" class="index-item">${project.title}</a>
+        `).join('');
 
-    const dialogueData = {
-      start: {
-        text: "System Online. Connections stable.",
-        options: [
-          { label: "Who are you?", next: "marwan" },
-          { label: "Where am I?", next: "portfolio" }
-        ]
-      },
-      marwan: {
-        text: "I'm Marwan, a Game Artist and Game Enjoyer.",
-        options: [
-          { label: "What kind of games do you play?", next: "games" },
-          { label: "What kind of art do you create?", next: "art" }
-        ]
-      },
-      games: {
-        text: "I love everything from shooters, to strategy games, to cozy games.",
-        options: [{ label: "Wow you're so cool.", next: "thanks" }]
-      },
-      art: {
-        text: "I've done it all, I am particularly passionate about Environments and World-Building.",
-        options: [{ label: "Wow you're so cool.", next: "thanks" }]
-      },
-      thanks: {
-        text: "Thanks, I know.",
-        options: [{ label: "[ Reinitialize ]", next: "reboot" }]
-      },
-      portfolio: {
-        text: "You're currently exploring the core of my portfolio.",
-        options: [
-          { label: "Who are you?", next: "marwan" },
-          { label: "Where else can I go?", next: "whereElse" }
-        ]
-      },
-      whereElse: {
-        text: "I'd recommend visiting the Works page.",
-        options: [
-          { label: "What pipeline do you work with?", next: "unity" },
-          { label: "How can I contact you?", next: "contact" }
-        ]
-      },
-      unity: {
-        text: "Unity is my playground. I source my assets across a variety of programs before bringing them all together.",
-        options: [{ label: "You seem so cold..", next: "cats" }]
-      },
-      contact: {
-        text: "Copy my email from the sidebar and hit me up.",
-        options: [{ label: "You seem so cold..", next: "cats" }]
-      },
-      cats: {
-        text: "Sorry, I will try to seem more human. I love cats :3",
-        options: [{ label: "[ Reinitialize ]", next: "reboot" }]
-      }
-    };
-
-    window.addEventListener('DOMContentLoaded', () => {
-      const overlay = document.getElementById('transition-overlay');
-      setTimeout(() => { overlay.style.opacity = '0'; }, 100);
-
-      window.onpageshow = function(event) {
-          overlay.style.opacity = '0';
-          overlay.style.display = 'none'; 
-          setTimeout(() => { overlay.style.display = 'block'; }, 100);
-      };
-
-      document.querySelectorAll('.transition-link').forEach(link => {
-        link.addEventListener('click', (e) => {
-          if (link.href === window.location.href) return;
-          e.preventDefault();
-          const target = link.href;
-          overlay.style.opacity = '1';
-          setTimeout(() => { window.location.href = target; }, 600);
-        });
+        container.innerHTML = data.map((project, idx) => `
+          <section class="project-entry" id="proj-${idx}">
+            <h1 class="project-title">${project.title}</h1>
+            <p class="project-tagline">${project.tagline}</p>
+            <div class="project-media-grid">
+              ${project.media.map(item => `<div><img src="${item.url}" alt="${project.title}"></div>`).join('')}
+            </div>
+            ${project.description ? `<p class="project-description">${project.description}</p>` : ''}
+            ${project.caseStudy ? `<a href="${project.caseStudy}" class="case-study-btn" target="_blank">Read Case Study →</a>` : ''}
+          </section>
+        `).join('');
       });
-    });
 
-    const typewriterElement = document.getElementById('typewriter');
-    const promptClick = document.getElementById('prompt-click');
-    const diagContainer = document.getElementById('dialogue-container');
-    const optionsList = document.getElementById('options-list');
-    
-    let currentText = "Welcome Traveller";
-    let charIndex = 0;
-
-    function type(speed, callback) {
-      if (charIndex < currentText.length) {
-        typewriterElement.textContent += currentText.charAt(charIndex);
-        charIndex++;
-        setTimeout(() => type(speed, callback), speed);
-      } else if (callback) {
-        callback();
-      }
-    }
-
-    setTimeout(() => {
-      type(50, () => { promptClick.classList.add('visible'); });
-    }, 1500);
-
-    promptClick.addEventListener('click', () => {
-      promptClick.style.display = 'none';
-      diagContainer.style.display = 'flex';
-      startDialogue('start');
-    });
-
-    function startDialogue(key) {
-      if (key === 'reboot') {
-        diagContainer.style.display = 'none';
-        typewriterElement.textContent = "";
-        currentText = "Welcome Traveller";
-        charIndex = 0;
-        promptClick.style.display = 'block';
-        promptClick.classList.remove('visible');
-        setTimeout(() => {
-          type(50, () => { promptClick.classList.add('visible'); });
-        }, 600);
-        return;
-      }
-
-      const node = dialogueData[key];
-      typewriterElement.textContent = "";
-      currentText = node.text;
-      charIndex = 0;
-      optionsList.innerHTML = "";
-      
-      type(20, () => {
-        node.options.forEach(opt => {
-          const btn = document.createElement('div');
-          btn.className = 'dialogue-btn';
-          btn.textContent = `> ${opt.label}`; 
-          btn.onclick = () => startDialogue(opt.next);
-          optionsList.appendChild(btn);
-        });
-      });
-    }
-
-    const emailBtn = document.getElementById('copyEmail');
-    emailBtn.addEventListener('click', () => {
+    // Sidebar Email Copy Logic
+    document.getElementById('copyEmail').addEventListener('click', function() {
       navigator.clipboard.writeText('maroggebriel@gmail.com').then(() => {
-        emailBtn.classList.add('copied');
-        setTimeout(() => emailBtn.classList.remove('copied'), 2000);
+        this.classList.add('copied');
+        setTimeout(() => this.classList.remove('copied'), 2000);
       });
     });
 
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.set(0, 6, 12);
-    camera.lookAt(0, 0, 0);
-
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    document.body.appendChild(renderer.domElement);
-
-    const params = {
-      count: 70000, radius: 12, branches: 3, spin: 1, randomness: 0.3,
-      insideColor: '#26c9df', outsideColor: '#151ce0'
-    };
-
-    let geometry, material, points = null;
-
-    const generateGalaxy = () => {
-      document.documentElement.style.setProperty('--accent', params.insideColor);
-      if(points !== null) { geometry.dispose(); material.dispose(); scene.remove(points); }
-      geometry = new THREE.BufferGeometry();
-      const positions = new Float32Array(params.count * 3);
-      const colors = new Float32Array(params.count * 3);
-      const colorInside = new THREE.Color(params.insideColor);
-      const colorOutside = new THREE.Color(params.outsideColor);
-
-      for(let i = 0; i < params.count; i++) {
-        const i3 = i * 3;
-        const radius = Math.random() * params.radius;
-        const spinAngle = radius * params.spin;
-        const branchAngle = (i % params.branches) / params.branches * Math.PI * 2;
-        const randomX = Math.pow(Math.random(), 3) * (Math.random() < 0.5 ? 1 : -1) * params.randomness * radius;
-        const randomY = Math.pow(Math.random(), 3) * (Math.random() < 0.5 ? 1 : -1) * params.randomness * radius;
-        const randomZ = Math.pow(Math.random(), 3) * (Math.random() < 0.5 ? 1 : -1) * params.randomness * radius;
-        positions[i3] = Math.cos(branchAngle + spinAngle) * radius + randomX;
-        positions[i3 + 1] = randomY;
-        positions[i3 + 2] = Math.sin(branchAngle + spinAngle) * radius + randomZ;
-        const mixedColor = colorInside.clone().lerp(colorOutside, radius / params.radius);
-        colors[i3] = mixedColor.r; colors[i3 + 1] = mixedColor.g; colors[i3 + 2] = mixedColor.b;
-      }
-      geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-      geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-      material = new THREE.PointsMaterial({ size: 0.015, sizeAttenuation: true, depthWrite: false, blending: THREE.AdditiveBlending, vertexColors: true });
-      points = new THREE.Points(geometry, material);
-      scene.add(points);
-    };
-
-    generateGalaxy();
-
-    const gui = new GUI();
-    gui.close(); 
-    gui.addColor(params, 'insideColor').name('Core Colour').onFinishChange(generateGalaxy);
-    gui.addColor(params, 'outsideColor').name('Edge Colour').onFinishChange(generateGalaxy);
-
-    let isDragging = false;
-    let previousMouseX = 0;
-    let velocity = 0.0005; 
-    const autoSpeed = 0.0005;
-    const friction = 0.985; 
-
-    renderer.domElement.addEventListener('mousedown', () => { isDragging = true; });
-    window.addEventListener('mouseup', () => { isDragging = false; });
-    window.addEventListener('mousemove', (e) => {
-      if (isDragging && points) {
-        const deltaX = e.clientX - previousMouseX;
-        velocity = deltaX * 0.002; 
-        points.rotation.y += velocity;
-      }
-      previousMouseX = e.clientX;
-    });
-
-    renderer.domElement.addEventListener('touchstart', (e) => {
-      isDragging = true;
-      previousMouseX = e.touches[0].clientX;
-    }, { passive: true });
-    window.addEventListener('touchend', () => { isDragging = false; });
-    window.addEventListener('touchmove', (e) => {
-      if (isDragging && points) {
-        const deltaX = e.touches[0].clientX - previousMouseX;
-        velocity = deltaX * 0.002;
-        points.rotation.y += velocity;
-        previousMouseX = e.touches[0].clientX;
-      }
-    }, { passive: true });
-
-    function animate() {
-      requestAnimationFrame(animate);
-      if (points) {
-        if (!isDragging) {
-          velocity *= friction;
-          if (Math.abs(velocity) < autoSpeed) velocity = autoSpeed;
-          points.rotation.y += velocity;
-        }
-      }
-      renderer.render(scene, camera);
-    }
-    animate();
-
-    window.addEventListener('resize', () => {
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
+    // Smooth transition
+    document.querySelectorAll('.transition-link').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        document.getElementById('transition-overlay').style.opacity = '1';
+        setTimeout(() => { window.location.href = link.href; }, 600);
+      });
     });
   </script>
 </body>
