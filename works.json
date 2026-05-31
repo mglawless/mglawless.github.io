@@ -33,6 +33,8 @@
     "caseStudy": "https://www.awwwards.com/igloo-inc-case-sstudy.html",
 
     "media": [
+      { "type": "image", "url": "assets/voxel9.png" },
+      { "type": "image", "url": "assets/voxel10.png" },
       { "type": "image", "url": "assets/voxel.png" },
       { "type": "image", "url": "assets/voxel2.png" },
       { "type": "image", "url": "assets/voxel3.png" },
