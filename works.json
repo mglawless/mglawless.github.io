@@ -33,6 +33,7 @@
     "caseStudy": "https://medium.com/@maroggebriel/making-voxel-assets-a-self-case-study-c9b9a75351be",
 
     "media": [
+      { "type": "video", "url": "https://www.youtube.com/watch?v=2-mffFRVKSI" },
       { "type": "image", "url": "assets/voxel9.jpg" },
       { "type": "image", "url": "assets/voxel10.jpg" },
       { "type": "image", "url": "assets/voxel.png" },
